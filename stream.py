@@ -5,6 +5,7 @@ from tweepy.streaming import StreamListener
 import socket
 import json
 import os
+from listener import listener
 
 def api_access():
 	config = {}
@@ -19,6 +20,8 @@ def send_data(c_socket):
 	auth = OAuthHandler(ckey, csecret)
 	auth.set_access_token(atoken, asecret)
 
+	twitter_stream = Stream(auth, TweetsListener(c_socket))
+	twitter_stream.filter(track=['overwatch'])
 	
 
 if __name__ == '__main__':
@@ -32,8 +35,11 @@ if __name__ == '__main__':
 	# Create a socket object
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	#s.settimeout(5)
+	
 	# Get local machine name
-	host = socket.gethostbyname(socket.gethostname())
+	#host = socket.gethostbyname(socket.gethostname())
+	host = socket.gethostname()
 	print('>>> Host Name:\t', host)
 	# Reserve a hst for your service
 	port = 5555
@@ -45,9 +51,12 @@ if __name__ == '__main__':
 	print('>>> Client connection')
 	#s.close()
 	# Establish connection with client
-	#c, addr = s.accept()
+	client, addr = s.accept()
 
-	#print('>>> Received request from ' + str(addr))
+	print('>>> Received request from ' + str(addr))
 
-	#send_data(c)
+	send_data(client)
+
+	s.close()
+
 
