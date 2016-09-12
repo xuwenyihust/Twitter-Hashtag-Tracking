@@ -28,8 +28,15 @@ if __name__ == '__main__':
 	# Create a socket object
 	s = socket.socket()
 	# Get local machine name
-	hostname = socket.gethostname()
-	print('>>> Host Name:\t', hostname)
+	host = socket.gethostbyname(socket.gethostname())
+	print('>>> Host Name:\t', host)
+	# Reserve a hst for your service
+	port = 5555
+	# Bind to the port
+	s.bind((host, port))
+	print('>>> Listening on port:\t%s' % str(port))
+
+
 
 
 
