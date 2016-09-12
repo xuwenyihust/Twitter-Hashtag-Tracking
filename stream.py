@@ -13,9 +13,13 @@ def api_access():
 
 	return config
 
-#def send_data():
 
 
+def send_data(c_socket):
+	auth = OAuthHandler(ckey, csecret)
+	auth.set_access_token(atoken, asecret)
+
+	
 
 if __name__ == '__main__':
 	# Get the Twitter API keys
@@ -26,7 +30,8 @@ if __name__ == '__main__':
 	ckey = config['ckey']
 
 	# Create a socket object
-	s = socket.socket()
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	# Get local machine name
 	host = socket.gethostbyname(socket.gethostname())
 	print('>>> Host Name:\t', host)
@@ -35,8 +40,14 @@ if __name__ == '__main__':
 	# Bind to the port
 	s.bind((host, port))
 	print('>>> Listening on port:\t%s' % str(port))
+	# Wait for client connection
+	s.listen(5)
+	print('>>> Client connection')
+	#s.close()
+	# Establish connection with client
+	#c, addr = s.accept()
 
+	#print('>>> Received request from ' + str(addr))
 
-
-
+	#send_data(c)
 
