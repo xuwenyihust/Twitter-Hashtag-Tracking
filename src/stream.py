@@ -9,7 +9,7 @@ from listener import listener
 
 def api_access():
 	config = {}
-	with open('config.json') as f:
+	with open('src/config.json') as f:
 		config.update(json.load(f))
 
 	return config
@@ -20,7 +20,7 @@ def send_data(c_socket):
 	auth = OAuthHandler(ckey, csecret)
 	auth.set_access_token(atoken, asecret)
 
-	twitter_stream = Stream(auth, TweetsListener(c_socket))
+	twitter_stream = Stream(auth, listener(c_socket))
 	twitter_stream.filter(track=['overwatch'])
 	
 
@@ -38,8 +38,8 @@ if __name__ == '__main__':
 	#s.settimeout(5)
 	
 	# Get local machine name
-	#host = socket.gethostbyname(socket.gethostname())
-	host = socket.gethostname()
+	host = socket.gethostbyname(socket.gethostname())
+	#host = socket.gethostname()
 	print('>>> Host Name:\t', host)
 	# Reserve a hst for your service
 	port = 5555
