@@ -32,24 +32,26 @@ if __name__ == '__main__':
 	csecret = config['csecret']
 	ckey = config['ckey']
 
-	# Create a socket object
+	# Create a TCP/IP socket object
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	#s.settimeout(5)
 	
 	# Get local machine name
 	host = socket.gethostbyname(socket.gethostname())
+	#host = '192.168.200.146'
 	#host = socket.gethostname()
-	print('>>> Host Name:\t', host)
+	print('>>> Host Name:\t%s' % str(host))
 	# Reserve a hst for your service
 	port = 5555
-	# Bind to the port
-	s.bind((host, port))
+	server_addr = (host, port)
+	# Bind the socket with the server address
+	s.bind(server_addr)
 	print('>>> Listening on port:\t%s' % str(port))
-	# Wait for client connection
+	# Calling listen() puts the socket into server mode
 	s.listen(5)
-	print('>>> Client connection')
-	#s.close()
+	print('>>> Waiting for client connection')
+	# accept() waits for an incoming connection
 	# Establish connection with client
 	client, addr = s.accept()
 
