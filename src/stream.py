@@ -21,7 +21,7 @@ def send_data(c_socket):
 	auth.set_access_token(atoken, asecret)
 
 	twitter_stream = Stream(auth, listener(c_socket))
-	twitter_stream.filter(track=['overwatch'])
+	twitter_stream.filter(track=['#overwatch'])
 	
 
 if __name__ == '__main__':

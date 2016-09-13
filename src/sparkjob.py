@@ -4,6 +4,7 @@ from pyspark.sql import SQLContext
 from pyspark.sql.functions import desc
 import socket
 import time
+from collections import namedtuple
 
 def main(sc):
 	print('>'*30+'SPARK START'+'>'*30)
@@ -14,29 +15,34 @@ def main(sc):
 	# The messages would accumulate for 10 seconds and then get processed.
 	ssc = StreamingContext(sc, 10)
 
-	# Receive the tweets
-	#host = socket.gethostname()
+	# Receive the tweets	
 	host = socket.gethostbyname(socket.gethostname())
-	socket_stream = ssc.socketTextStream(host, 5555)
+	# Create a DStream that represents streaming data from TCP source
+	lines = ssc.socketTextStream(host, 5555)
 	# Create a window
-	lines = socket_stream.window( 20 )
-
-	# Create a namedtuple
-	from collections import namedtuple
-	fields = ("tag", "count" )
-	Tweet = namedtuple( 'Tweet', fields )
+	# The RDD will be created for every 10 seconds, but the data in RDD will be for the last 20 seconds
+	#lines = socket_stream.window( 20 )
 
 	# Process the stream
-	( lines.flatMap( lambda text: text.split( " " ) )
-		.filter( lambda word: word.lower().startswith("#") )
-		.map( lambda word: ( word.lower(), 1 ) )
-		.reduceByKey( lambda a, b: a + b )
-		.map( lambda rec: Tweet( rec[0], rec[1] ) )
-		.foreachRDD( lambda rdd: rdd.toDF().sort( desc("count") )
-		.limit(10).registerTempTable("tweets") ) )
+	'''
+	lines.flatMap( lambda text: text.split( " " ) ) \
+		.filter( lambda word: word.lower().startswith("#") ) \
+		.map( lambda word: ( word.lower(), 1 ) ) \
+		.reduceByKey( lambda a, b: a + b ) \
+		.map( lambda rec: Tweet( rec[0], rec[1] ) ) \
+		.foreachRDD( lambda rdd: rdd.toDF().sort( desc("count") ) \
+		.limit(10).register	Tweet = namedtuple( 'Tweet', fields ))
+	'''
+	
+	words = lines.flatMap(lambda line: line.split(" "))
+	pairs = words.map(lambda word: (word, 1))
+	wordCounts = pairs.reduceByKey(lambda x, y: x + y)
+	wordCounts.pprint()
+	print(wordCounts)
 
-	ssc.start()  
-	time.sleep(10)
+	ssc.start()
+	time.sleep(50)
+	#ssc.awaitTermination()
 	ssc.stop()
 	print('>'*30+'SPARK STOP'+'>'*30)
 
