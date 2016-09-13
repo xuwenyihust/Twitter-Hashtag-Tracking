@@ -18,6 +18,7 @@ class listener(StreamListener):
 			# Increment the counter
 			self.counter += 1
 			print( tweetdict['text'].encode('utf-8') )
+			self.client_socket.send( tweetdict['text'].encode('utf-8') )
 
 			return True
 		else:
