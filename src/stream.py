@@ -14,14 +14,19 @@ def api_access():
 
 	return config
 
+def hashtag_load():
+	hashtag = ''
+	with open('hashtag.json') as f:
+		h = json.load(f)
+		hashtag = h['hashtag']
+	return hashtag
 
-
-def send_data(c_socket):
+def send_data(c_socket, hashtag):
 	auth = OAuthHandler(ckey, csecret)
 	auth.set_access_token(atoken, asecret)
 
 	twitter_stream = Stream(auth, listener(c_socket))
-	twitter_stream.filter(track=['#overwatch'])
+	twitter_stream.filter(track=[hashtag], languages=['en'])
 	
 
 if __name__ == '__main__':
@@ -31,6 +36,9 @@ if __name__ == '__main__':
 	atoken = config['atoken']
 	csecret = config['csecret']
 	ckey = config['ckey']
+
+	# Load the hashtag to be tracked
+	hashtag = hashtag_load()
 
 	# Create a TCP/IP socket object
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +65,7 @@ if __name__ == '__main__':
 
 	print('>>> Received request from ' + str(addr))
 
-	send_data(client)
+	send_data(client, hashtag)
 
 	s.close()
 
