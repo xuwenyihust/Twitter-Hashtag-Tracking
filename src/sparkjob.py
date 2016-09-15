@@ -35,16 +35,17 @@ def main(sc):
 	# 1) Count the number of tweets
 	tweet_count = lines.count()
 	tweet_count.pprint()
-	# 2) Count the number of users
-	#user_count = lines.map(lambda line: line[1]).count()
-	#user_count.pprint()
-	# 3) Find the related keywords
+	# 2) Find the related keywords
 	# Get the stop words
 	stop_words_url = 'https://raw.githubusercontent.com/6/stopwords-json/master/dist/en.json'
-	stop_words_json = urllib.urlopen(stop_words_url)
+	stop_words_json = urllib.request.urlopen(stop_words_url).read()
+	stop_words_decoded = stop_words_json.decode('utf8')
 	# Load the stop words into a list
-	stop_words = json.load(stop_words_json)	
-	
+	stop_words = json.loads(stop_words_decoded)	
+	# Create a nametuple
+	fields = ("keyword", "count" )
+	Tweet = namedtuple( 'Tweet', fields )
+
 	words = lines\
 				.map(lambda line: line.replace(',', '')) \
 				.map(lambda line: line.replace('.', '')) \
@@ -58,21 +59,29 @@ def main(sc):
 				.map(lambda line: line.replace('(', '')) \
 				.map(lambda line: line.replace(')', '')) \
 				.map(lambda line: line.replace('#', '')) \
+				.map(lambda line: line.replace('.', '')) \
 				.map(lambda line: line.replace('\\', '')) \
 				.map(lambda line: line.replace('/', '')) \
-				.flatMap(lambda line: line.split(' ')) \
-				.map(lambda word: 'None' if word in stop_words else word) \
+				.flatMap(lambda line: line.split()) \
+				.map(lambda word: word if word in stop_words else 'None') \
 				.map(lambda word: (word.lower(), 1)) \
-				.reduceByKey(lambda x, y: x+y) \
-				#.foreachRDD(lambda rdd, rdd.take())
+				.reduceByKey(lambda x, y: x+y)
+				#.map(lambda word: Tweet( word[0], word[1] ))
 
-				
 	words.pprint()
-
+	#words.saveAsTextFiles('Test')
+	words.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).limit(10).registerTempTable("tweets"))
 
 	ssc.start()
 	time.sleep((batch_interval+1)*process_times)
 	#ssc.awaitTermination()
+	#ssc.stop()
+
+	#time.sleep((batch_interval+1)*process_times + 10)
+	top_10_words = sqlContext.sql( 'Select Keyword, Count from tweets' )
+	top_10_df = top_10_words.toPandas()
+	print(top_10_df.head())
+
 	ssc.stop()
 	print('>'*30+'SPARK STOP'+'>'*30)
 
