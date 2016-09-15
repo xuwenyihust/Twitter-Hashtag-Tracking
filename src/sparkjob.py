@@ -5,7 +5,7 @@ from pyspark.sql.functions import desc
 import socket
 import time
 from collections import namedtuple
-import urllib
+import urllib.request
 import json
 
 def main(sc):
@@ -41,10 +41,10 @@ def main(sc):
 	stop_words_json = urllib.request.urlopen(stop_words_url).read()
 	stop_words_decoded = stop_words_json.decode('utf8')
 	# Load the stop words into a list
-	stop_words = json.loads(stop_words_decoded)	
-	# Create a nametuple
-	fields = ("keyword", "count" )
-	Tweet = namedtuple( 'Tweet', fields )
+	stop_words = json.loads(stop_words_decoded)
+	print('>>> "i" in stop_words?')
+	if 'i' in stop_words:
+		print('Yes!')
 
 	words = lines\
 				.map(lambda line: line.replace(',', '')) \
@@ -63,24 +63,28 @@ def main(sc):
 				.map(lambda line: line.replace('\\', '')) \
 				.map(lambda line: line.replace('/', '')) \
 				.flatMap(lambda line: line.split()) \
-				.map(lambda word: word if word in stop_words else 'None') \
-				.map(lambda word: (word.lower(), 1)) \
+				.map(lambda word: word.lower()) \
+				.map(lambda word: word if word not in stop_words else 'none') \
+				.map(lambda word: (word, 1)) \
 				.reduceByKey(lambda x, y: x+y)
 				#.map(lambda word: Tweet( word[0], word[1] ))
 
 	words.pprint()
 	#words.saveAsTextFiles('Test')
-	words.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).limit(10).registerTempTable("tweets"))
+	words.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("tweets"))
 
 	ssc.start()
-	time.sleep((batch_interval+1)*process_times)
+	time.sleep((batch_interval)*process_times)
 	#ssc.awaitTermination()
 	#ssc.stop()
 
 	#time.sleep((batch_interval+1)*process_times + 10)
-	top_10_words = sqlContext.sql( 'Select Keyword, Count from tweets' )
-	top_10_df = top_10_words.toPandas()
-	print(top_10_df.head())
+
+	time.sleep(10)
+	top_words = sqlContext.sql( 'Select Keyword, Count from tweets' )
+	top_df = top_words.toPandas()
+	top_df = top_df[top_df['Keyword'] != 'none']
+	print(top_df.head())
 
 	ssc.stop()
 	print('>'*30+'SPARK STOP'+'>'*30)
