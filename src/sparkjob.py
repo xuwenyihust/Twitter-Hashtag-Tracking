@@ -4,6 +4,7 @@ from pyspark.sql import SQLContext
 from pyspark.sql.functions import desc
 import socket
 import time
+import datetime
 from collections import namedtuple
 import urllib.request
 import json
@@ -13,8 +14,7 @@ def main(sc):
 	print('>'*30+'SPARK START'+'>'*30)
 
 	batch_interval = 10
-	process_times = 1
-	window_time = 20
+	window_time = 10
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -32,6 +32,9 @@ def main(sc):
 	# 1) Count the number of tweets
 	tweet_count = lines.count()
 	tweet_count.pprint()
+	#tweet_cnt_li.append((tweet_count, datetime.time))
+	#tweet_cnt = 
+
 	# 2) Find the related keywords
 	# Get the stop words
 	stop_words_url = 'https://raw.githubusercontent.com/6/stopwords-json/master/dist/en.json'
@@ -79,15 +82,17 @@ def main(sc):
 
 	# Start the streaming process
 	ssc.start()
-	time.sleep(window_time*2)
-	#ssc.awaitTermination()
-	#ssc.stop()
+	time.sleep(window_time*2+1)
 
+	# The counts of tweets at different times
+
+	# Find the top related keywords
 	top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
 	top_words_df = top_words.toPandas()
 	top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
 	print(top_words_df.head(10))
 
+	# Find the top related hashtags
 	top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
 	top_hashtags_df = top_hashtags.toPandas()	
 	print(top_hashtags_df.head(10))
