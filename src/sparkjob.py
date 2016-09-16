@@ -82,20 +82,27 @@ def main(sc):
 
 	# Start the streaming process
 	ssc.start()
-	time.sleep(window_time*2+1)
+	#time.sleep(window_time*3+1)
 
-	# The counts of tweets at different times
+	process_cnt = 0
+	while process_cnt < 2:
+		time.sleep(window_time+3)
+		# The counts of tweets at different times
 
-	# Find the top related keywords
-	top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
-	top_words_df = top_words.toPandas()
-	top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
-	print(top_words_df.head(10))
+		# Find the top related keywords
+		top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
+		top_words_df = top_words.toPandas()
+		top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
+		print(top_words_df.head(10))
 
-	# Find the top related hashtags
-	top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
-	top_hashtags_df = top_hashtags.toPandas()	
-	print(top_hashtags_df.head(10))
+		# Find the top related hashtags
+		top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
+		top_hashtags_df = top_hashtags.toPandas()	
+		print(top_hashtags_df.head(10))
+
+		process_cnt += 1
+
+
 
 	ssc.stop()
 	print('>'*30+'SPARK STOP'+'>'*30)
