@@ -12,8 +12,9 @@ def main(sc):
 
 	print('>'*30+'SPARK START'+'>'*30)
 
-	batch_interval = 30
+	batch_interval = 10
 	process_times = 1
+	window_time = 20
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -25,13 +26,9 @@ def main(sc):
 	# Receive the tweets	
 	host = socket.gethostbyname(socket.gethostname())
 	# Create a DStream that represents streaming data from TCP source
-	lines = ssc.socketTextStream(host, 5555)
+	socket_stream = ssc.socketTextStream(host, 5555)
+	lines = socket_stream.window(window_time)
 
-	# Process the stream	
-	'''words = lines.flatMap(lambda line: line.split(" "))
-	pairs = words.map(lambda word: (word, 1))
-	wordCounts = pairs.reduceByKey(lambda x, y: x + y)
-	wordCounts.pprint()'''
 	# 1) Count the number of tweets
 	tweet_count = lines.count()
 	tweet_count.pprint()
@@ -42,11 +39,8 @@ def main(sc):
 	stop_words_decoded = stop_words_json.decode('utf8')
 	# Load the stop words into a list
 	stop_words = json.loads(stop_words_decoded)
-	print('>>> "i" in stop_words?')
-	if 'i' in stop_words:
-		print('Yes!')
 
-	words = lines\
+	keywords = lines\
 				.map(lambda line: line.replace(',', '')) \
 				.map(lambda line: line.replace('.', '')) \
 				.map(lambda line: line.replace('!', '')) \
@@ -60,6 +54,7 @@ def main(sc):
 				.map(lambda line: line.replace(')', '')) \
 				.map(lambda line: line.replace('#', '')) \
 				.map(lambda line: line.replace('.', '')) \
+				.map(lambda line: line.replace('-', '')) \
 				.map(lambda line: line.replace('\\', '')) \
 				.map(lambda line: line.replace('/', '')) \
 				.flatMap(lambda line: line.split()) \
@@ -67,24 +62,35 @@ def main(sc):
 				.map(lambda word: word if word not in stop_words else 'none') \
 				.map(lambda word: (word, 1)) \
 				.reduceByKey(lambda x, y: x+y)
-				#.map(lambda word: Tweet( word[0], word[1] ))
+				
+	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords"))
 
-	words.pprint()
-	#words.saveAsTextFiles('Test')
-	words.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("tweets"))
+	# 3) Find the related hashtags
+	hashtags = lines.flatMap(lambda line: line.split()) \
+					.map(lambda line: line.replace(',', '')) \
+					.map(lambda line: line.replace('.', '')) \
+					.map(lambda line: line.replace('!', '')) \
+					.map(lambda line: line.replace('?', '')) \
+					.filter(lambda word: word.startswith('#')) \
+					.map(lambda word: (word.lower(), 1)) \
+					.reduceByKey(lambda x, y: x+y)
+	
+	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
 
+	# Start the streaming process
 	ssc.start()
-	time.sleep((batch_interval)*process_times)
+	time.sleep(window_time*2)
 	#ssc.awaitTermination()
 	#ssc.stop()
 
-	#time.sleep((batch_interval+1)*process_times + 10)
+	top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
+	top_words_df = top_words.toPandas()
+	top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
+	print(top_words_df.head(10))
 
-	time.sleep(10)
-	top_words = sqlContext.sql( 'Select Keyword, Count from tweets' )
-	top_df = top_words.toPandas()
-	top_df = top_df[top_df['Keyword'] != 'none']
-	print(top_df.head())
+	top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
+	top_hashtags_df = top_hashtags.toPandas()	
+	print(top_hashtags_df.head(10))
 
 	ssc.stop()
 	print('>'*30+'SPARK STOP'+'>'*30)
