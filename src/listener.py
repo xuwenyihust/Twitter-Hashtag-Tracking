@@ -24,7 +24,7 @@ class listener(StreamListener):
 			#urldict = tweetdict['entities']['urls']
 			#userdict = tweetdict['entities']['user_mentions']
 			#tweet = [text, username, hashdict, urldict, userdict]
-			print(text )
+			print(text)
 			self.client_socket.send(text)
 		except KeyError:
 			print('Error.')
