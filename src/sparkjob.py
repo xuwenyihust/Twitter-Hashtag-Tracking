@@ -30,6 +30,7 @@ def main(sc):
 	lines = socket_stream.window(window_time)
 
 	# 1) Count the number of tweets
+<<<<<<< HEAD
 	'''tweet_cnt = tweet_count.map(lambda x: (datetime.time, x)) \
 					.foreachRDD(lambda x: x.toDF(['Time', 'Count']).registerTempTable("tweet_count"))'''
 	tweet_cnt = lines.map(lambda line: 1) \
@@ -42,6 +43,12 @@ def main(sc):
 
 
 
+=======
+	tweet_count = lines.count()
+	tweet_count.pprint()
+	#tweet_cnt_li.append((tweet_count, datetime.time))
+	#tweet_cnt = 
+>>>>>>> origin/master
 
 	# 2) Find the related keywords
 	# Get the stop words
@@ -73,7 +80,11 @@ def main(sc):
 				.map(lambda word: word if word not in stop_words else 'none') \
 				.map(lambda word: (word, 1)) \
 				.reduceByKey(lambda x, y: x+y)
+<<<<<<< HEAD
 		
+=======
+				
+>>>>>>> origin/master
 	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords"))
 
 	# 3) Find the related hashtags
@@ -90,6 +101,7 @@ def main(sc):
 
 	# Start the streaming process
 	ssc.start()
+<<<<<<< HEAD
 
 	process_cnt = 0
 	#tweet_cnt_li = []
@@ -123,6 +135,25 @@ def main(sc):
 			print(top_hashtags_df.head(10))
 		else:
 			print('Currently no table related_hashtags.')
+=======
+	#time.sleep(window_time*3+1)
+
+	process_cnt = 0
+	while process_cnt < 2:
+		time.sleep(window_time+3)
+		# The counts of tweets at different times
+
+		# Find the top related keywords
+		top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
+		top_words_df = top_words.toPandas()
+		top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
+		print(top_words_df.head(10))
+
+		# Find the top related hashtags
+		top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
+		top_hashtags_df = top_hashtags.toPandas()	
+		print(top_hashtags_df.head(10))
+>>>>>>> origin/master
 
 		process_cnt += 1
 
