@@ -15,6 +15,8 @@ def main(sc):
 
 	batch_interval = 10
 	window_time = 10
+	
+	tweet_cnt_li = []
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -30,17 +32,12 @@ def main(sc):
 	lines = socket_stream.window(window_time)
 
 	# 1) Count the number of tweets
-	'''tweet_cnt = tweet_count.map(lambda x: (datetime.time, x)) \
-					.foreachRDD(lambda x: x.toDF(['Time', 'Count']).registerTempTable("tweet_count"))'''
+	cnt_check = lines.count()
+	cnt_check.pprint()
 	tweet_cnt = lines.map(lambda line: 1) \
 					.reduce(lambda x,y: x+y) 
-	
-	tweet_cnt_li = []				
+		
 	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.append(x.collect()))
-
-	tweet_cnt.pprint()
-
-
 
 
 	# 2) Find the related keywords
@@ -87,6 +84,7 @@ def main(sc):
 					.reduceByKey(lambda x, y: x+y)
 	
 	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
+	
 
 	# Start the streaming process
 	ssc.start()
@@ -94,19 +92,12 @@ def main(sc):
 	process_cnt = 0
 	#tweet_cnt_li = []
 	while process_cnt < 2:
-		time.sleep(window_time+5)
+		time.sleep(window_time)
 		print('Count:')
 		print(tweet_cnt_li)
-		print('Tables:')
-		print(sqlContext.tables().collect())
-		# The counts of tweets at different times
-		if len(sqlContext.tables().filter("tableName LIKE '%tweet_count%'").collect()) == 1:
-
-			t_count = sqlContext.sql( 'Select Time, Count from tweet_count' )
-			t_count_df = t_count.toPandas()
-			print(t_count_df.head())
-		else:
-			print('Currently no table tweet_count.')
+		#print('Tables:')
+		#print(sqlContext.tables().collect())
+	
 		# Find the top related keywords
 		if len(sqlContext.tables().filter("tableName LIKE '%related_keywords%'").collect()) == 1:
 			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
