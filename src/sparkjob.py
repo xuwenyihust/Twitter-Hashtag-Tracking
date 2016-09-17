@@ -9,14 +9,66 @@ from collections import namedtuple
 import urllib.request
 import json
 
+
+def tweet_count(lines):
+	tweet_cnt = lines.map(lambda line: 1) \
+                    .reduce(lambda x,y: x+y)
+	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.append(x.collect()))
+
+
+def related_keywords(lines):
+	# Get the stop words
+	stop_words_url = 'https://raw.githubusercontent.com/6/stopwords-json/master/dist/en.json'
+	stop_words_json = urllib.request.urlopen(stop_words_url).read()
+	stop_words_decoded = stop_words_json.decode('utf8')
+	# Load the stop words into a list
+	stop_words = json.loads(stop_words_decoded)
+	keywords = lines\
+                .map(lambda line: line.replace(',', '')) \
+                .map(lambda line: line.replace('.', '')) \
+                .map(lambda line: line.replace('!', '')) \
+                .map(lambda line: line.replace('?', '')) \
+                .map(lambda line: line.replace(':', '')) \
+                .map(lambda line: line.replace(';', '')) \
+                .map(lambda line: line.replace('"', '')) \
+                .map(lambda line: line.replace('@', '')) \
+                .map(lambda line: line.replace('&', '')) \
+                .map(lambda line: line.replace('(', '')) \
+                .map(lambda line: line.replace(')', '')) \
+                .map(lambda line: line.replace('#', '')) \
+                .map(lambda line: line.replace('.', '')) \
+                .map(lambda line: line.replace('-', '')) \
+                .map(lambda line: line.replace('\\', '')) \
+                .map(lambda line: line.replace('/', '')) \
+                .flatMap(lambda line: line.split()) \
+                .map(lambda word: word.lower()) \
+                .map(lambda word: word if word not in stop_words else 'none') \
+                .map(lambda word: (word, 1)) \
+                .reduceByKey(lambda x, y: x+y)
+
+	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords"))
+
+
+def related_hashtags(lines):
+	hashtags = lines.flatMap(lambda line: line.split()) \
+                    .map(lambda line: line.replace(',', '')) \
+                    .map(lambda line: line.replace('.', '')) \
+                    .map(lambda line: line.replace('!', '')) \
+                    .map(lambda line: line.replace('?', '')) \
+                    .filter(lambda word: word.startswith('#')) \
+                    .map(lambda word: (word.lower(), 1)) \
+                    .reduceByKey(lambda x, y: x+y)
+
+	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
+
+
+
 def main(sc):
 
 	print('>'*30+'SPARK START'+'>'*30)
 
 	batch_interval = 10
 	window_time = 10
-	
-	tweet_cnt_li = []
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -32,58 +84,13 @@ def main(sc):
 	lines = socket_stream.window(window_time)
 
 	# 1) Count the number of tweets
-	cnt_check = lines.count()
-	cnt_check.pprint()
-	tweet_cnt = lines.map(lambda line: 1) \
-					.reduce(lambda x,y: x+y) 
-		
-	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.append(x.collect()))
-
+	tweet_count(lines)
 
 	# 2) Find the related keywords
-	# Get the stop words
-	stop_words_url = 'https://raw.githubusercontent.com/6/stopwords-json/master/dist/en.json'
-	stop_words_json = urllib.request.urlopen(stop_words_url).read()
-	stop_words_decoded = stop_words_json.decode('utf8')
-	# Load the stop words into a list
-	stop_words = json.loads(stop_words_decoded)
-
-	keywords = lines\
-				.map(lambda line: line.replace(',', '')) \
-				.map(lambda line: line.replace('.', '')) \
-				.map(lambda line: line.replace('!', '')) \
-				.map(lambda line: line.replace('?', '')) \
-				.map(lambda line: line.replace(':', '')) \
-				.map(lambda line: line.replace(';', '')) \
-				.map(lambda line: line.replace('"', '')) \
-				.map(lambda line: line.replace('@', '')) \
-				.map(lambda line: line.replace('&', '')) \
-				.map(lambda line: line.replace('(', '')) \
-				.map(lambda line: line.replace(')', '')) \
-				.map(lambda line: line.replace('#', '')) \
-				.map(lambda line: line.replace('.', '')) \
-				.map(lambda line: line.replace('-', '')) \
-				.map(lambda line: line.replace('\\', '')) \
-				.map(lambda line: line.replace('/', '')) \
-				.flatMap(lambda line: line.split()) \
-				.map(lambda word: word.lower()) \
-				.map(lambda word: word if word not in stop_words else 'none') \
-				.map(lambda word: (word, 1)) \
-				.reduceByKey(lambda x, y: x+y)
-		
-	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords"))
+	related_keywords(lines)
 
 	# 3) Find the related hashtags
-	hashtags = lines.flatMap(lambda line: line.split()) \
-					.map(lambda line: line.replace(',', '')) \
-					.map(lambda line: line.replace('.', '')) \
-					.map(lambda line: line.replace('!', '')) \
-					.map(lambda line: line.replace('?', '')) \
-					.filter(lambda word: word.startswith('#')) \
-					.map(lambda word: (word.lower(), 1)) \
-					.reduceByKey(lambda x, y: x+y)
-	
-	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
+	related_hashtags(lines)
 	
 
 	# Start the streaming process
@@ -130,6 +137,8 @@ if __name__=="__main__":
 	conf.setAppName("Twitter-Hashtag-Tracking")
 	# Initialize a SparkContext
 	sc = SparkContext(conf=conf)
+	# Initialize the tweet_cnt_li
+	tweet_cnt_li = []
 	# Execute main function
 	main(sc)
 
