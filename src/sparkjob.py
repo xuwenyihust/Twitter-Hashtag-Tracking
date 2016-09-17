@@ -97,7 +97,7 @@ def main(sc):
 	ssc.start()
 
 	process_cnt = 0
-	#tweet_cnt_li = []
+
 	while process_cnt < 2:
 		time.sleep(window_time)
 		print('Count:')
