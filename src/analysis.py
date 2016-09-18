@@ -8,12 +8,13 @@ import datetime
 from collections import namedtuple
 import urllib.request
 import json
+from pymongo import MongoClient
 
 
 def tweet_count(lines):
 	tweet_cnt = lines.map(lambda line: 1) \
                     .reduce(lambda x,y: x+y)
-	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.append(x.collect()))
+	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.extend(x.collect()))
 
 
 def related_keywords(lines):
@@ -45,8 +46,9 @@ def related_keywords(lines):
                 .map(lambda word: word if word not in stop_words else 'none') \
                 .map(lambda word: (word, 1)) \
                 .reduceByKey(lambda x, y: x+y)
+	
+	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords_tmp"))
 
-	keywords.foreachRDD(lambda x: x.toDF(['Keyword', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_keywords"))
 
 
 def related_hashtags(lines):
@@ -59,7 +61,7 @@ def related_hashtags(lines):
                     .map(lambda word: (word.lower(), 1)) \
                     .reduceByKey(lambda x, y: x+y)
 
-	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
+	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags_tmp"))
     
 
 
@@ -80,6 +82,10 @@ def main(sc):
 	socket_stream = ssc.socketTextStream(host, 5555)
 	lines = socket_stream.window(window_time)
 
+	# Construct tables
+	tmp = [('None', 0)]
+	related_keywords_df = sqlContext.createDataFrame(tmp, ['Keyword', 'Count'])
+
 	# 1) Count the number of tweets
 	tweet_count(lines)
 
@@ -96,30 +102,34 @@ def main(sc):
 	process_cnt = 0
 
 	while process_cnt < process_times:
-		time.sleep(window_time)
+		time.sleep(window_time)		
 		print('Count:')
-		print(tweet_cnt_li)
-		#print('Tables:')
-		#print(sqlContext.tables().collect())
+		print(tweet_cnt_li)		
 	
 		# Find the top related keywords
-		if len(sqlContext.tables().filter("tableName LIKE '%related_keywords%'").collect()) == 1:
-			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords' )	
-			top_words_df = top_words.toPandas()
-			top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
-			print(top_words_df.head(10))
-		else:
-			print('Currently no table related_keywords.')
+		if len(sqlContext.tables().filter("tableName LIKE 'related_keywords_tmp'").collect()) == 1:
+			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords_tmp' )	
+			#top_words_df = top_words.toPandas()
+			#top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
+			#print(top_words_df.head(10))
+			# Add tmp to the final table
+			related_keywords_df = related_keywords_df.unionAll(top_words)
 
 		# Find the top related hashtags
-		if len(sqlContext.tables().filter("tableName LIKE '%related_hashtags%'").collect()) == 1:
-			top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags' )
+		if len(sqlContext.tables().filter("tableName LIKE 'related_hashtags_tmp'").collect()) == 1:
+			top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags_tmp' )
 			top_hashtags_df = top_hashtags.toPandas()	
 			print(top_hashtags_df.head(10))
 		else:
-			print('Currently no table related_hashtags.')
+			print('Currently no table related_hashtags_tmp.')
 
 		process_cnt += 1
+		
+	# Final tables
+	print('>>> related_keywords_df')
+	related_keywords_df.orderBy(related_keywords_df['Count'].desc())
+	print(related_keywords_df.take(10))
+
 
 	ssc.stop()
 	###########################################################################
@@ -145,6 +155,10 @@ if __name__=="__main__":
 		batch_interval = int(p['DStream']['batch_interval'])
 		window_time = int(p['DStream']['window_time'])
 		process_times = int(p['DStream']['process_times'])
+	# COnnect to the running mongod instance
+	client = MongoClient()
+	# Switch to the database
+	db = client.test
 	# Execute main function
 	main(sc)
 
