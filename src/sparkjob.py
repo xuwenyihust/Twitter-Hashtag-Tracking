@@ -60,15 +60,12 @@ def related_hashtags(lines):
                     .reduceByKey(lambda x, y: x+y)
 
 	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags"))
-
+    
 
 
 def main(sc):
 
 	print('>'*30+'SPARK START'+'>'*30)
-
-	batch_interval = 10
-	window_time = 10
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -137,8 +134,14 @@ if __name__=="__main__":
 	conf.setAppName("Twitter-Hashtag-Tracking")
 	# Initialize a SparkContext
 	sc = SparkContext(conf=conf)
+	# Initialize sparksql context
+    # Will be used to query the trends from the result.
+	sqlContext = SQLContext(sc)
 	# Initialize the tweet_cnt_li
 	tweet_cnt_li = []
+
+	batch_interval = 10
+	window_time = 10
 	# Execute main function
 	main(sc)
 
