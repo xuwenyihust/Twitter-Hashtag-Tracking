@@ -139,7 +139,7 @@ if __name__=="__main__":
 	sqlContext = SQLContext(sc)
 	# Initialize the tweet_cnt_li
 	tweet_cnt_li = []
-
+	# Load parameters
 	with open('parameters.json') as f:
 		p = json.load(f)
 		batch_interval = int(p['DStream']['batch_interval'])
