@@ -1,0 +1,8 @@
+{
+ 
+	"hashtag": "i",
+	"DStream": {
+		"batch_interval": "10",
+		"window_time": "10"
+	}
+}

@@ -95,7 +95,7 @@ def main(sc):
 
 	process_cnt = 0
 
-	while process_cnt < 2:
+	while process_cnt < 3:
 		time.sleep(window_time)
 		print('Count:')
 		print(tweet_cnt_li)
@@ -140,8 +140,10 @@ if __name__=="__main__":
 	# Initialize the tweet_cnt_li
 	tweet_cnt_li = []
 
-	batch_interval = 10
-	window_time = 10
+	with open('parameters.json') as f:
+		p = json.load(f)
+		batch_interval = int(p['DStream']['batch_interval'])
+		window_time = int(p['DStream']['window_time'])
 	# Execute main function
 	main(sc)
 

@@ -16,7 +16,7 @@ def api_access():
 
 def hashtag_load():
 	hashtag = ''
-	with open('hashtag.json') as f:
+	with open('parameters.json') as f:
 		h = json.load(f)
 		hashtag = h['hashtag']
 	return hashtag
