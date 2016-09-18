@@ -89,7 +89,7 @@ def main(sc):
 	# 3) Find the related hashtags
 	related_hashtags(lines)
 	
-
+	###########################################################################
 	# Start the streaming process
 	ssc.start()
 
@@ -121,9 +121,9 @@ def main(sc):
 
 		process_cnt += 1
 
-
-
 	ssc.stop()
+	###########################################################################
+
 	print('>'*30+'SPARK STOP'+'>'*30)
 
 
