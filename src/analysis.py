@@ -8,6 +8,7 @@ import datetime
 from collections import namedtuple
 import urllib.request
 import json
+import pandas as pd
 from pymongo import MongoClient
 
 
@@ -67,7 +68,7 @@ def related_hashtags(lines):
 
 def main(sc):
 
-	print('>'*30+'SPARK START'+'>'*30)
+	#print('>'*30+'SPARK START'+'>'*30)
 
 	# Initialize sparksql context
 	# Will be used to query the trends from the result.
@@ -83,8 +84,9 @@ def main(sc):
 	lines = socket_stream.window(window_time)
 
 	# Construct tables
-	tmp = [('None', 0)]
+	tmp = [('none', 0)]
 	related_keywords_df = sqlContext.createDataFrame(tmp, ['Keyword', 'Count'])
+	related_hashtags_df = sqlContext.createDataFrame(tmp, ['Hashtag', 'Count'])
 
 	# 1) Count the number of tweets
 	tweet_count(lines)
@@ -108,33 +110,46 @@ def main(sc):
 	
 		# Find the top related keywords
 		if len(sqlContext.tables().filter("tableName LIKE 'related_keywords_tmp'").collect()) == 1:
-			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords_tmp' )	
-			#top_words_df = top_words.toPandas()
-			#top_words_df = top_words_df[top_words_df['Keyword'] != 'none']
-			#print(top_words_df.head(10))
-			# Add tmp to the final table
+			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords_tmp' )		
 			related_keywords_df = related_keywords_df.unionAll(top_words)
 
 		# Find the top related hashtags
 		if len(sqlContext.tables().filter("tableName LIKE 'related_hashtags_tmp'").collect()) == 1:
-			top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags_tmp' )
-			top_hashtags_df = top_hashtags.toPandas()	
-			print(top_hashtags_df.head(10))
-		else:
-			print('Currently no table related_hashtags_tmp.')
+			top_hashtags = sqlContext.sql( 'Select Hashtag, Count from related_hashtags_tmp' )	
+			related_hashtags_df = related_hashtags_df.unionAll(top_hashtags)
+
 
 		process_cnt += 1
 		
-	# Final tables
-	print('>>> related_keywords_df')
-	related_keywords_df.orderBy(related_keywords_df['Count'].desc())
-	print(related_keywords_df.take(10))
+	# Final tables	
+	#related_keywords_df = related_keywords_df.orderBy(related_keywords_df['Count'].desc())
+	related_keywords_df = related_keywords_df.filter(related_keywords_df['Keyword'] != 'none')
+	# Spark SQL to Pandas Dataframe
+	related_keywords_pd = related_keywords_df.toPandas()
+	related_keywords_pd = related_keywords_pd.groupby(related_keywords_pd['Keyword']).sum()
+	related_keywords_pd = pd.DataFrame(related_keywords_pd)
+	related_keywords_pd = related_keywords_pd.sort("Count", ascending=0)
+	#print(related_keywords_df.take(10))
+
+
+	#related_hashtags_df = related_hashtags_df.orderBy(related_hashtags_df['Count'].desc())
+	# Spark SQL to Pandas Dataframe
+	related_hashtags_pd = related_hashtags_df.toPandas() 
+	related_hashtags_pd = related_hashtags_pd.groupby(related_hashtags_pd['Hashtag']).sum()
+	related_hashtags_pd = pd.DataFrame(related_hashtags_pd)
+	related_hashtags_pd = related_hashtags_pd.sort("Count", ascending=0)
+	#print(related_hashtags_df.take(10))
 
 
 	ssc.stop()
 	###########################################################################
 
-	print('>'*30+'SPARK STOP'+'>'*30)
+
+	print(related_keywords_pd.head(10))
+	print(related_hashtags_pd.head(10))
+	related_keywords_js = json.loads(related_keywords_pd.to_json()).values()
+	print(related_keywords_js)
+	#print('>'*30+'SPARK STOP'+'>'*30)
 
 
 if __name__=="__main__":
