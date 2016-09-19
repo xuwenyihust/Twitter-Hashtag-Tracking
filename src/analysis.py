@@ -66,7 +66,7 @@ def related_hashtags(lines):
     
 
 
-def main(sc):
+def main(sc, db):
 
 	#print('>'*30+'SPARK START'+'>'*30)
 
@@ -148,7 +148,15 @@ def main(sc):
 	print(related_keywords_pd.head(10))
 	print(related_hashtags_pd.head(10))
 	related_keywords_js = json.loads(related_keywords_pd.to_json()).values()
-	print(related_keywords_js)
+	#print(related_keywords_js)
+	related_hashtags_js = json.loads(related_hashtags_pd.to_json()).values()
+	#print(related_hashtags_js)
+
+	#collection = db['keywords']
+	db['keywords'].insert(related_keywords_js)
+	'''cursor = db['keywords'].find()
+	for document in cursor:
+		print(document)'''
 	#print('>'*30+'SPARK STOP'+'>'*30)
 
 
@@ -170,10 +178,11 @@ if __name__=="__main__":
 		batch_interval = int(p['DStream']['batch_interval'])
 		window_time = int(p['DStream']['window_time'])
 		process_times = int(p['DStream']['process_times'])
-	# COnnect to the running mongod instance
-	client = MongoClient()
+	# Connect to the running mongod instance
+	conn = MongoClient()
 	# Switch to the database
-	db = client.test
+	db = conn['twitter']
+	db['keywords'].drop()
 	# Execute main function
-	main(sc)
+	main(sc, db)
 
