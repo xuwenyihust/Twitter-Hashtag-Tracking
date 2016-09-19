@@ -69,11 +69,11 @@ def data_to_db(db, counts, keywords, hashtags):
 
 	# Store keywords
 	collection = db['keywords']
-	db['keywords'].insert(keywords,)
-	cursor = db['keywords'].find()
+	db['keywords'].insert(keywords)
+	'''cursor = db['keywords'].find()
 	for document in cursor:
 		print(document)
-
+	'''
 
 
 def main(sc, db):
@@ -164,11 +164,7 @@ def main(sc, db):
 
 	# Store the data to MongoDB
 	data_to_db(db, tweet_cnt_li, related_keywords_js, related_hashtags_js)
-	#collection = db['keywords']
-	#db['keywords'].insert(related_keywords_js)
-	'''cursor = db['keywords'].find()
-	for document in cursor:
-		print(document)'''
+
 	#print('>'*30+'SPARK STOP'+'>'*30)
 
 
@@ -194,7 +190,9 @@ if __name__=="__main__":
 	conn = MongoClient()
 	# Switch to the database
 	db = conn['twitter']
+	db['counts'].drop()
 	db['keywords'].drop()
+	db['hashtags'].drop()
 	# Execute main function
 	main(sc, db)
 
