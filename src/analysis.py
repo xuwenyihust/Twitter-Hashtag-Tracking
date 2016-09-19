@@ -63,7 +63,17 @@ def related_hashtags(lines):
                     .reduceByKey(lambda x, y: x+y)
 
 	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags_tmp"))
-    
+   
+
+def data_to_db(db, counts, keywords, hashtags):
+
+	# Store keywords
+	collection = db['keywords']
+	db['keywords'].insert(keywords,)
+	cursor = db['keywords'].find()
+	for document in cursor:
+		print(document)
+
 
 
 def main(sc, db):
@@ -152,8 +162,10 @@ def main(sc, db):
 	related_hashtags_js = json.loads(related_hashtags_pd.to_json()).values()
 	#print(related_hashtags_js)
 
+	# Store the data to MongoDB
+	data_to_db(db, tweet_cnt_li, related_keywords_js, related_hashtags_js)
 	#collection = db['keywords']
-	db['keywords'].insert(related_keywords_js)
+	#db['keywords'].insert(related_keywords_js)
 	'''cursor = db['keywords'].find()
 	for document in cursor:
 		print(document)'''
