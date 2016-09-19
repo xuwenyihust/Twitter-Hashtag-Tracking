@@ -65,8 +65,11 @@ def related_hashtags(lines):
 	hashtags.foreachRDD(lambda x: x.toDF(['Hashtag', 'Count']).sort(desc('Count')).limit(100).registerTempTable("related_hashtags_tmp"))
    
 
-def data_to_db(db, counts, keywords, hashtags):
-
+def data_to_db(db, start_time, counts, keywords, hashtags):
+	# Store counts
+	counts = json.dumps(counts)
+	print(start_time)
+	print(counts)
 	# Store keywords
 	collection = db['keywords']
 	db['keywords'].insert(keywords)
@@ -114,7 +117,8 @@ def main(sc, db):
 	process_cnt = 0
 
 	while process_cnt < process_times:
-		time.sleep(window_time)		
+		time.sleep(window_time)	
+		start_time = datetime.datetime.now()	
 		print('Count:')
 		print(tweet_cnt_li)		
 	
@@ -163,7 +167,7 @@ def main(sc, db):
 	#print(related_hashtags_js)
 
 	# Store the data to MongoDB
-	data_to_db(db, tweet_cnt_li, related_keywords_js, related_hashtags_js)
+	data_to_db(db, start_time, tweet_cnt_li, related_keywords_js, related_hashtags_js)
 
 	#print('>'*30+'SPARK STOP'+'>'*30)
 
