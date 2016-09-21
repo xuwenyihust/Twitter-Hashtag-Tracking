@@ -73,6 +73,9 @@ def data_to_db(db, start_time, counts, keywords, hashtags):
 	# Store keywords
 	collection = db['keywords']
 	db['keywords'].insert(keywords)
+	# Store hashtags
+	collection = db['hashtags']
+	db['hashtags'].insert(hashtags)
 	'''cursor = db['keywords'].find()
 	for document in cursor:
 		print(document)
@@ -136,24 +139,18 @@ def main(sc, db):
 		process_cnt += 1
 		
 	# Final tables	
-	#related_keywords_df = related_keywords_df.orderBy(related_keywords_df['Count'].desc())
-	related_keywords_df = related_keywords_df.filter(related_keywords_df['Keyword'] != 'none')
+	related_keywords_df = related_keywords_df.filter(related_keywords_df['Keyword'] != 'none')	
 	# Spark SQL to Pandas Dataframe
 	related_keywords_pd = related_keywords_df.toPandas()
 	related_keywords_pd = related_keywords_pd.groupby(related_keywords_pd['Keyword']).sum()
 	related_keywords_pd = pd.DataFrame(related_keywords_pd)
-	related_keywords_pd = related_keywords_pd.sort("Count", ascending=0)
-	#print(related_keywords_df.take(10))
+	related_keywords_pd = related_keywords_pd.sort("Count", ascending=0).iloc[0:9]
 
-
-	#related_hashtags_df = related_hashtags_df.orderBy(related_hashtags_df['Count'].desc())
 	# Spark SQL to Pandas Dataframe
 	related_hashtags_pd = related_hashtags_df.toPandas() 
 	related_hashtags_pd = related_hashtags_pd.groupby(related_hashtags_pd['Hashtag']).sum()
 	related_hashtags_pd = pd.DataFrame(related_hashtags_pd)
-	related_hashtags_pd = related_hashtags_pd.sort("Count", ascending=0)
-	#print(related_hashtags_df.take(10))
-
+	related_hashtags_pd = related_hashtags_pd.sort("Count", ascending=0).iloc[0:9]	
 
 	ssc.stop()
 	###########################################################################
@@ -161,9 +158,9 @@ def main(sc, db):
 
 	print(related_keywords_pd.head(10))
 	print(related_hashtags_pd.head(10))
-	related_keywords_js = json.loads(related_keywords_pd.to_json()).values()
+	related_keywords_js = json.loads(related_keywords_pd.reset_index().to_json(orient='records'))
 	#print(related_keywords_js)
-	related_hashtags_js = json.loads(related_hashtags_pd.to_json()).values()
+	related_hashtags_js = json.loads(related_hashtags_pd.reset_index().to_json(orient='records'))
 	#print(related_hashtags_js)
 
 	# Store the data to MongoDB

@@ -1,112 +1,34 @@
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SPARK START>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Traceback (most recent call last):
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/streaming/util.py", line 64, in call
-    return r._jrdd
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/rdd.py", line 2385, in _jrdd
-    pickled_cmd, bvars, env, includes = _prepare_for_python_RDD(self.ctx, command, self)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/rdd.py", line 2305, in _prepare_for_python_RDD
-    pickled_command = ser.dumps(command)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/serializers.py", line 427, in dumps
-    return cloudpickle.dumps(obj, 2)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 641, in dumps
-    cp.dump(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 107, in dump
-    return Pickler.dump(self, obj)
-  File "/usr/lib/python2.7/pickle.py", line 224, in dump
-    self.save(obj)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 562, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 199, in save_function
-    self.save_function_tuple(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 236, in save_function_tuple
-    save((code, closure, base_globals))
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 548, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 600, in save_list
-    self._batch_appends(iter(obj))
-  File "/usr/lib/python2.7/pickle.py", line 633, in _batch_appends
-    save(x)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 199, in save_function
-    self.save_function_tuple(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 236, in save_function_tuple
-    save((code, closure, base_globals))
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 548, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 600, in save_list
-    self._batch_appends(iter(obj))
-  File "/usr/lib/python2.7/pickle.py", line 636, in _batch_appends
-    save(tmp[0])
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 199, in save_function
-    self.save_function_tuple(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 236, in save_function_tuple
-    save((code, closure, base_globals))
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 548, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 600, in save_list
-    self._batch_appends(iter(obj))
-  File "/usr/lib/python2.7/pickle.py", line 636, in _batch_appends
-    save(tmp[0])
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 193, in save_function
-    self.save_function_tuple(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 236, in save_function_tuple
-    save((code, closure, base_globals))
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 548, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 600, in save_list
-    self._batch_appends(iter(obj))
-  File "/usr/lib/python2.7/pickle.py", line 636, in _batch_appends
-    save(tmp[0])
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 369, in save_global
-    self.save(dd)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 649, in save_dict
-    self._batch_setitems(obj.iteritems())
-  File "/usr/lib/python2.7/pickle.py", line 681, in _batch_setitems
-    save(v)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 193, in save_function
-    self.save_function_tuple(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 242, in save_function_tuple
-    save(defaults)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/usr/lib/python2.7/pickle.py", line 548, in save_tuple
-    save(element)
-  File "/usr/lib/python2.7/pickle.py", line 286, in save
-    f(self, obj) # Call unbound method with explicit self
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 315, in save_builtin_function
-    return self.save_function(obj)
-  File "/home/wenyixu/spark-1.5.0-bin-hadoop2.6/python/lib/pyspark.zip/pyspark/cloudpickle.py", line 191, in save_function
-    if islambda(obj) or obj.__code__.co_filename == '<stdin>' or themodule is None:
-AttributeError: 'builtin_function_or_method' object has no attribute '__code__'
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SPARK STOP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Count:
+[]
+Count:
+[78, 61]
+Count:
+[78, 61, 75]
+         Count
+Keyword       
+love        69
+youtube     35
+video       34
+amp         34
+day         27
+wanna       24
+feel        23
+today       23
+hate        23
+
+[9 rows x 1 columns]
+                   Count
+Hashtag                 
+#androidgames         12
+#android              12
+#youtubemarketing     10
+#youtube              10
+#gameinsightrt         5
+#gameinsighti          5
+#mplusplaces           4
+#mplusrewards          3
+#onedirection          2
+
+[9 rows x 1 columns]
+2016-09-21 16:02:35.217115
+[78, 61, 75]
