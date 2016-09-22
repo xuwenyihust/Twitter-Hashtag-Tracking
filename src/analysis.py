@@ -67,19 +67,23 @@ def related_hashtags(lines):
 
 def data_to_db(db, start_time, counts, keywords, hashtags):
 	# Store counts
-	counts = json.dumps(counts)
-	print(start_time)
-	print(counts)
+	counts_t = []
+	for i in range(len(counts)):
+		time = str(start_time[i]).split(" ")[1]
+		time = time.split(".")[0]
+		counts_t.append((time, counts[i]))
+	counts_df = pd.DataFrame(counts_t, columns=['Time', 'Count'])
+	counts_js = json.loads(counts_df.reset_index().to_json(orient='records'))
+	#print(counts_t)	
+	collection = db['counts']
+	db['counts'].insert(counts_js)
 	# Store keywords
 	collection = db['keywords']
 	db['keywords'].insert(keywords)
 	# Store hashtags
 	collection = db['hashtags']
 	db['hashtags'].insert(hashtags)
-	'''cursor = db['keywords'].find()
-	for document in cursor:
-		print(document)
-	'''
+
 
 
 def main(sc, db):
@@ -118,13 +122,13 @@ def main(sc, db):
 	ssc.start()
 
 	process_cnt = 0
+	start_time = [datetime.datetime.now()]
 
 	while process_cnt < process_times:
-		time.sleep(window_time)	
-		start_time = datetime.datetime.now()	
-		print('Count:')
-		print(tweet_cnt_li)		
-	
+		time.sleep(window_time)		
+		#print('Count:')
+		#print(tweet_cnt_li)		
+		start_time.append(datetime.datetime.now())	
 		# Find the top related keywords
 		if len(sqlContext.tables().filter("tableName LIKE 'related_keywords_tmp'").collect()) == 1:
 			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords_tmp' )		
@@ -156,8 +160,8 @@ def main(sc, db):
 	###########################################################################
 
 
-	print(related_keywords_pd.head(10))
-	print(related_hashtags_pd.head(10))
+	#print(related_keywords_pd.head(10))
+	#print(related_hashtags_pd.head(10))
 	related_keywords_js = json.loads(related_keywords_pd.reset_index().to_json(orient='records'))
 	#print(related_keywords_js)
 	related_hashtags_js = json.loads(related_hashtags_pd.reset_index().to_json(orient='records'))
