@@ -12,9 +12,12 @@ DBS_NAME = 'twitter'
 COLLECTION_NAME0 = 'keywords'
 COLLECTION_NAME1 = 'hashtags'
 COLLECTION_NAME2 = 'counts'
+COLLECTION_NAME3 = 'ratio'
 FIELDS0 = {'Keyword': True, 'Count': True, '_id': False}
 FIELDS1 = {'Hashtag': True, 'Count': True, '_id': False}
 FIELDS2 = {'_id': False}
+FIELDS3 = {'_id': False}
+
 
 app = Flask(__name__)
 
@@ -52,6 +55,18 @@ def counts():
         connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
         collection = connection[DBS_NAME][COLLECTION_NAME2]
         projects = collection.find(projection=FIELDS2)
+        json_projects = []
+        for project in projects:
+                json_projects.append(project)
+        json_projects = json.dumps(json_projects, default=json_util.default)
+        connection.close()
+        return json_projects
+
+@app.route("/data/ratio")
+def ratio():
+        connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = connection[DBS_NAME][COLLECTION_NAME3]
+        projects = collection.find(projection=FIELDS3)
         json_projects = []
         for project in projects:
                 json_projects.append(project)
