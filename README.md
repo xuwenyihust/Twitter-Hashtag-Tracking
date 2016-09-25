@@ -6,6 +6,20 @@
 Track specific hashtags or keywords in Twitter, do real-time analysis on the tweets.
 
 ## Run Example
+### Configuration
+
+```json
+{ "hashtag": "#overwatch",
+  "DStream": { "batch_interval": "10",
+               "window_time": "10",
+               "process_times": "10" }
+}
+```
+### Twitter Input
+
+### Spark Streaming
+
+### Dashboard
 
 ## Prerequisite
 
