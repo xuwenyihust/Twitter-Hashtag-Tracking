@@ -31,7 +31,14 @@ Run the data visualization jobs.
 python3.4 web/dashboard.py
 ```
 ## Prerequisite
-
+* [pyspark](http://spark.apache.org/docs/latest/api/python/pyspark.html)
+* [pyspark.sql](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=udf)
+* [pyspark.streaming](https://spark.apache.org/docs/1.6.2/api/python/pyspark.streaming.html)
+* [pyspark.mllib](https://spark.apache.org/docs/1.6.0/api/python/pyspark.mllib.html)
+* [socket](https://docs.python.org/3/library/socket.html)
+* [urllib](https://docs.python.org/3/library/urllib.html)
+* [pandas](http://pandas.pydata.org/)
+* [pymongo](https://api.mongodb.com/python/current/)
 
 ## Resources
 * [Twitter Trends Analysis using Spark Streaming](http://www.awesomestats.in/spark-twitter-stream/)
