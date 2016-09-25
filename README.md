@@ -38,8 +38,26 @@ python3.4 web/dashboard.py
 
 ## Process
 
+### Twitter API
+* Use Twitter API **tweepy** to stream tweets
+* Filter out the tweets which contain the specific keywords/hashtag that we want to track.
+* Use **TCP/IP socket** to send the fetched tweets to the spark job
+
+### Real-time Analysis
+* Use **Spark Streaming** to perform the real-time analysis on the tweets
+* Count the number of related tweets for each time interval
+* Tweet context **preprocess**
+    * Remove all punctuations
+    * Set capital letters to lower case
+    * Remove stop words for better performance
+* Find out the most related keywords
+* Find out the most related hashtags 
+
+### Database
+* Use MongoDB to store the analysis results
+
 ### Visualization
-Time line of related tweet counts, most related hashtags, most related keywords, the ratio of postive/negative tweets.
+**Time line** of related tweet counts, **most related hashtags**, **most related keywords**, the ratio of **postive/negative** tweets.
 <p align="justify">
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="200"/>
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/hashtags.JPG" width="200"/>
