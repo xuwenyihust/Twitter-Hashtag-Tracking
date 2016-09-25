@@ -7,7 +7,7 @@ Track specific hashtags or keywords in Twitter, do real-time analysis on the twe
 
 ## Run Example
 ### Configuration
-
+Modify the conf/parameters.json file to set the parameters.
 ```json
 { "hashtag": "#overwatch",
   "DStream": { "batch_interval": "10",
@@ -16,11 +16,20 @@ Track specific hashtags or keywords in Twitter, do real-time analysis on the twe
 }
 ```
 ### Twitter Input
-
+Wait for connection to start streaming tweets.
+```
+python3.4 src/stream.py
+```
 ### Spark Streaming
-
+Run Spark jobs to do real-time analysis on the tweets.
+```
+$SPARK_HOME/bin/spark-submit src/analysis.py > log/analysis.log
+```
 ### Dashboard
-
+Run the data visualization jobs.
+```
+python3.4 web/dashboard.py
+```
 ## Prerequisite
 
 
