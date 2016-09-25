@@ -49,12 +49,16 @@ python3.4 web/dashboard.py
 * Tweet context **preprocess**
     * Remove all punctuations
     * Set capital letters to lower case
-    * Remove stop words for better performance
-* Find out the most related keywords
-* Find out the most related hashtags 
+    * Remove **stop words** for better performance
+* Find out the most **related keywords**
+* Find out the most **related hashtags** 
+* **Sentiment analysis**
+    * Use **Spark MLlib** to build a **Naive Bayes** model
+    * Classify each tweet to be **positive/negative**
+    * **Training examples** from [Sanders Analytics](http://www.sananalytics.com/lab/twitter-sentiment/)
 
 ### Database
-* Use MongoDB to store the analysis results
+* Use **MongoDB** to store the analysis results
 
 ### Visualization
 **Time line** of related tweet counts, **most related hashtags**, **most related keywords**, the ratio of **postive/negative** tweets.
