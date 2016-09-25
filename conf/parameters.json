@@ -4,6 +4,6 @@
 	"DStream": {
 		"batch_interval": "10",
 		"window_time": "10",
-		"process_times": "3"
+		"process_times": "10"
 	}
 }
