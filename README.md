@@ -35,6 +35,15 @@ Run the data visualization jobs.
 ```
 python3.4 web/dashboard.py
 ```
+
+## Process
+
+### Visualization
+Time line of related tweet counts.
+<p align="justify">
+  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="500"/>
+</p>
+
 ## Prerequisite
 * [pyspark](http://spark.apache.org/docs/latest/api/python/pyspark.html)
 * [pyspark.sql](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html?highlight=udf)
@@ -44,6 +53,7 @@ python3.4 web/dashboard.py
 * [urllib](https://docs.python.org/3/library/urllib.html)
 * [pandas](http://pandas.pydata.org/)
 * [pymongo](https://api.mongodb.com/python/current/)
+* [tweepy](http://www.tweepy.org/)
 
 ## Resources
 * [Twitter Trends Analysis using Spark Streaming](http://www.awesomestats.in/spark-twitter-stream/)
