@@ -44,7 +44,7 @@ Time line of related tweet counts.
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="200"/>
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/hashtags.JPG" width="200"/>
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/keywords.JPG" width="200"/>
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/Ratio.JPG" width="200"/>
+  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/Ratio.JPG" width="150"/>
 </p>
 
 ## Prerequisite
