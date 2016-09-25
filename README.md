@@ -39,7 +39,7 @@ python3.4 web/dashboard.py
 ## Process
 
 ### Visualization
-Time line of related tweet counts.
+Time line of related tweet counts, most related hashtags, most related keywords, the ratio of postive/negative tweets.
 <p align="justify">
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="200"/>
   <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/hashtags.JPG" width="200"/>
