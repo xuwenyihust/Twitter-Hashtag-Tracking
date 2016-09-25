@@ -41,7 +41,7 @@ python3.4 web/dashboard.py
 ### Visualization
 Time line of related tweet counts.
 <p align="justify">
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="500"/>
+  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="200"/>
 </p>
 
 ## Prerequisite
