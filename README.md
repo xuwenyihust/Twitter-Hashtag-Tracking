@@ -15,6 +15,11 @@ Modify the conf/parameters.json file to set the parameters.
                "process_times": "10" }
 }
 ```
+### MongoDB Database
+Start a mongod process
+```
+sudo mongod
+```
 ### Twitter Input
 Wait for connection to start streaming tweets.
 ```
