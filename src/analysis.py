@@ -88,7 +88,8 @@ def sentiment_analysis(lines, model, hashingTF, iDF):
 def data_to_db(db, start_time, counts, keywords, hashtags, pos):
 	# Store counts
 	counts_t = []
-	for i in range(len(counts)):
+	for i in range(min(len(counts), len(start_time))):
+		print(str(start_time[i]))
 		time = str(start_time[i]).split(" ")[1]
 		time = time.split(".")[0]
 		counts_t.append((time, counts[i]))
@@ -108,7 +109,7 @@ def data_to_db(db, start_time, counts, keywords, hashtags, pos):
 	pos_whole = sum(pos)
 	#print(whole)
 	#print(pos)
-	ratio = 1.0*pos_whole/whole
+	ratio = 1.0*pos_whole/whole	
 	ratio_df = pd.DataFrame([ratio], columns=['Ratio'])
 	ratio_js = json.loads(ratio_df.reset_index().to_json(orient='records'))
 	collection = db['ratio']
@@ -263,7 +264,9 @@ def main(sc, db):
 	ssc.stop()
 	###########################################################################
 
-	#print(pos_cnt_li)
+	print(tweet_cnt_li)
+	print(start_time)
+	print(pos_cnt_li)
 	#print(related_keywords_pd.head(10))
 	#print(related_hashtags_pd.head(10))
 	related_keywords_js = json.loads(related_keywords_pd.reset_index().to_json(orient='records'))
@@ -303,6 +306,7 @@ if __name__=="__main__":
 	db['counts'].drop()
 	db['keywords'].drop()
 	db['hashtags'].drop()
+	db['ratio'].drop()
 	# Execute main function
 	main(sc, db)
 
