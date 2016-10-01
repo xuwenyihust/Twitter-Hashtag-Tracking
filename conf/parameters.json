@@ -1,9 +1,9 @@
 {
  
-	"hashtag": "i",
+	"hashtag": "#overwatch",
 	"DStream": {
-		"batch_interval": "10",
-		"window_time": "10",
-		"process_times": "3"
+		"batch_interval": "60",
+		"window_time": "60",
+		"process_times": "10"
 	}
 }
