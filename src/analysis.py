@@ -109,8 +109,9 @@ def data_to_db(db, start_time, counts, keywords, hashtags, pos):
 	pos_whole = sum(pos)
 	#print(whole)
 	#print(pos)
-	ratio = 1.0*pos_whole/whole	
-	ratio_df = pd.DataFrame([ratio], columns=['Ratio'])
+	pos = 1.0*pos_whole/whole	
+	neg = 1-pos
+	ratio_df = pd.DataFrame([(pos, 'P'), (neg, 'N')], columns=['Ratio', 'PN'])
 	ratio_js = json.loads(ratio_df.reset_index().to_json(orient='records'))
 	collection = db['ratio']
 	db['ratio'].insert(ratio_js)

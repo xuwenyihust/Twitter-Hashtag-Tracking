@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-
 <head>
-	<style>
-
-  .bar{
-    fill: steelblue;
-  }
-
-  .bar:hover{
-    fill: brown;
-  }
-
-	.axis {
-	  font: 10px sans-serif;
-	}
-
-	.axis path,
-	.axis line {
-	  fill: none;
-	  stroke: #000;
-	  shape-rendering: crispEdges;
-	}
-
+  <h1 class='head'>Twitter Tracking Dashboard</h1>
+  <style>
+		.head{
+			font: 50px sans-serif;
+		}
+		.bar{
+			fill: steelblue;
+		}
+		.bar:hover{
+			fill: brown;
+		}
+		.axis {
+			font: 10px sans-serif;
+		}
+		.axis path,
+		.axis line {
+		fill: none;
+		stroke: #000;
+		shape-rendering: crispEdges;
+   	}	
 	</style>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 
 <body>
-	
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="static/charts.js"></script>
-
+  <script src="static/keyword.js"></script>
+	<script src="static/hashtag.js"></script>
+	<div>
+		<script src="static/count.js"></script>	
+		<script src="static/ratio.js"></script>
+	</div>
 </body>
 
