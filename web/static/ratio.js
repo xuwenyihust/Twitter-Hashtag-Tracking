@@ -2,17 +2,17 @@
 //
 // Ratio Chart
 //
-var margin = {top: 20, right: 100, bottom: 70, left: 60},
-    width = 400 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+var ratio_margin = {top: 20, right: 100, bottom: 70, left: 140},
+    ratio_width = 400 - ratio_margin.left - ratio_margin.right,
+    ratio_height = 300 - ratio_margin.top - ratio_margin.bottom;
 
 // add the SVG element
-var ratio = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+var ratio = d3.select("#ratio").append("svg")
+    .attr("width", ratio_width + ratio_margin.left + ratio_margin.right)
+    .attr("height", ratio_height + ratio_margin.top + ratio_margin.bottom)
     .append("g")
     .attr("transform",
-          "translate(" + width  + "," + height/2 + ")");
+          "translate(" + ratio_width  + "," + ratio_height/2 + ")");
 
 var pie = d3.layout.pie()
     .sort(null)

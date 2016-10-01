@@ -6,10 +6,6 @@
       background: #f2f2f2;
       padding: 60px 20px 0;
     }
-		body.container div[class="row"]{
-			padding-left: 5px;
-			padding-right: 5px;
-		}
 		.navbar-inverse {
       background-color: #3d4a57;
       border-color: #333;
@@ -78,54 +74,55 @@
 
 
 	<div class="row">
-		<div class="col-sm-4">
+		<div class="col-sm-12">
 			<div class="chart_wrapper">
 				<div class="chart_title">
-        	Most Related Keywords
+        	Tweet Counts Timeline 
       	</div>
-				<div class="chart_stage">
-  				<script src="static/keyword.js"></script>	
+				<div class="chart_stage" id="count">
+  				<script src="static/count.js"></script>	
 				</div>
-			</div>
+			</div>			
 		</div>
-
-
-		<div class="col-sm-4">	
-			<div class="chart_wrapper">
-				<div class="chart_title">
-        	Most Related Hashtags
-      	</div>
-				<div class="chart_stage">
-					<script src="static/hashtag.js"></script>
-				</div>
-			</div>
-		</div>
-	</div>		
+	</div>	
 	
-
 	<div class="row">
+
+    <div class="col-sm-4">
+			<div class="chart_wrapper">
+        <div class="chart_title">
+          Most Related Keywords
+        </div>
+        <div class="chart_stage" id="keyword">
+          <script src="static/keyword.js"></script>
+        </div>
+      </div>
+    </div>
+
 		<div class="col-sm-4">
-			<div class="chart_wrapper">
-				<div class="chart_title">
-        	Tweet Counts Timeline
-      	</div>
-				<div class="chart_stage">
-					<script src="static/count.js"></script>
-				</div>
-			</div>
-		</div>
+      <div class="chart_wrapper">
+        <div class="chart_title">
+          Most Related Hashtags
+        </div>
+        <div class="chart_stage" id="hashtag">
+          <script src="static/hashtag.js"></script>
+        </div>
+      </div>
+    </div>
 
-	<div class="col-sm-4">
-			<div class="chart_wrapper">
-				<div class="chart_title">
-        	Pos/Neg Ratio
-      	</div>	
-				<div class="chart_stage">
-					<script src="static/ratio.js"></script>
-				</div>
-			</div>
-		</div>
-	</div>
+		<div class="col-sm-4">
+      <div class="chart_wrapper">
+        <div class="chart_title">
+          Pos/Neg Ratio
+        </div>
+        <div class="chart_stage" id="ratio">
+          <script src="static/ratio.js"></script>
+        </div>
+      </div>
+    </div>
 
+  </div>
+
+       
 </body>
 

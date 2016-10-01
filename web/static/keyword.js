@@ -20,7 +20,7 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .ticks(10);
 // add the SVG element
-var keyword = d3.select("body").append("svg") 
+var keyword = d3.select("#keyword").append("svg") 
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
