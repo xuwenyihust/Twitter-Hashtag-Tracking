@@ -64,10 +64,7 @@ d3.json("/data/counts", function(error, data) {
   count.selectAll("path")
     .data(data)
     .enter().append("path")
-    .attr("class", "line")
-    .attr("fill", "none")
-    .attr("stroke", "blue")
-    .attr("stroke-width", 3)
+    .attr("class", "path_line") 
     .attr("d", line(data));
 
 });

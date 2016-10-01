@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <h1 class='head'>Twitter Tracking Dashboard</h1>
   <style>
-		.head{
-			font: 50px sans-serif;
+		body.container{
+      background: #f2f2f2;
+      padding: 60px 20px 0;
+    }
+		body.container div[class="row"]{
+			padding-left: 5px;
+			padding-right: 5px;
 		}
+		.navbar-inverse {
+      background-color: #3d4a57;
+      border-color: #333;
+    }
+    .navbar-inverse .navbar-nav > li > a,
+    .navbar a.navbar-brand {
+      color: #fbfbfb;
+      text-decoration: none;
+    }
 		.bar{
 			fill: steelblue;
 		}
 		.bar:hover{
-			fill: brown;
+			fill: blue;
 		}
 		.axis {
 			font: 10px sans-serif;
@@ -20,17 +33,99 @@
 		fill: none;
 		stroke: #000;
 		shape-rendering: crispEdges;
-   	}	
+   	}
+		.path_line {
+		fill: none;
+		stroke: steelblue;
+		stroke-width: 3;
+		}
+		.path_line:hover{
+		stroke: blue;
+		stroke-width: 4;
+		}
+		.chart_wrapper {
+			background: #fff;
+			border: 1px solid #e2e2e2;
+			border-radius: 3px;
+			margin-bottom: 10px;
+		}
+		.chart_wrapper .chart_title {
+			border-bottom: 1px solid #d7d7d7;
+			padding: 7px 10px 4px;
+			font: 16px;
+		}
+		.chart_wrapper .chart_stage {
+			overflow: hidden;
+			padding: 5px 10px;
+			position: relative;
+		}
 	</style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 
-<body>
-  <script src="static/keyword.js"></script>
-	<script src="static/hashtag.js"></script>
-	<div>
-		<script src="static/count.js"></script>	
-		<script src="static/ratio.js"></script>
+<body class="container">
+
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="./">Real-Time Twitter Analysis</a>
+      </div>
+    </div>
+  </div>
+
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+        	Most Related Keywords
+      	</div>
+				<div class="chart_stage">
+  				<script src="static/keyword.js"></script>	
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-sm-4">	
+			<div class="chart_wrapper">
+				<div class="chart_title">
+        	Most Related Hashtags
+      	</div>
+				<div class="chart_stage">
+					<script src="static/hashtag.js"></script>
+				</div>
+			</div>
+		</div>
+	</div>		
+	
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+        	Tweet Counts Timeline
+      	</div>
+				<div class="chart_stage">
+					<script src="static/count.js"></script>
+				</div>
+			</div>
+		</div>
+
+	<div class="col-sm-4">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+        	Pos/Neg Ratio
+      	</div>	
+				<div class="chart_stage">
+					<script src="static/ratio.js"></script>
+				</div>
+			</div>
+		</div>
 	</div>
+
 </body>
 
