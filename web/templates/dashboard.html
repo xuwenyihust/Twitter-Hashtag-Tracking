@@ -55,6 +55,12 @@
 			padding: 5px 10px;
 			position: relative;
 		}
+		.chart_wrapper .text_stage {
+			font: 20px;
+			padding: 5px 10px;
+			position: relative;
+		}
+
 	</style>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -74,16 +80,41 @@
 
 
 	<div class="row">
-		<div class="col-sm-12">
+
+		<div class="col-sm-8">
 			<div class="chart_wrapper">
 				<div class="chart_title">
-        	Tweet Counts Timeline 
+        			Tweet Counts Timeline 
       	</div>
 				<div class="chart_stage" id="count">
   				<script src="static/count.js"></script>	
 				</div>
 			</div>			
 		</div>
+
+		<div class="col-sm-4">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+					Total Number of Tracked Tweets
+				</div>
+				<div class="chart_stage" id="total">
+					<script src="static/total.js"></script>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+					Tracked Hashtag
+				</div>
+				<div class="text_stage" id="track">
+					<script src="static/track.js"></script>
+				</div>
+			</div>
+		</div>
+
+
 	</div>	
 	
 	<div class="row">

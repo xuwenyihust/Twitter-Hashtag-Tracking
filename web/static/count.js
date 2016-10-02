@@ -3,7 +3,7 @@
 // Counts Chart
 //
 var count_margin = {top: 20, right: 100, bottom: 70, left: 60},
-    count_width = 1000 - count_margin.left - count_margin.right,
+    count_width = 800 - count_margin.left - count_margin.right,
     count_height = 300 - count_margin.top - count_margin.bottom;
 
 // set the ranges
