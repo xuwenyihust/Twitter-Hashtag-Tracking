@@ -57,7 +57,7 @@ d3.json("/data/counts", function(error, data) {
       .text("Count");
 
     var line = d3.svg.line()
-            .x(function(d) { return 40+count_x(d.Time); })
+            .x(function(d) { return 5+count_x(d.Time); })
             .y(function(d) { return count_y(d.Count);});
 
 

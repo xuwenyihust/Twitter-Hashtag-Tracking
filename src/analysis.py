@@ -85,7 +85,7 @@ def sentiment_analysis(lines, model, hashingTF, iDF):
 	analysis.foreachRDD(lambda x: pos_cnt_li.extend(x.collect()))	
 
 
-def data_to_db(db, start_time, counts, keywords, hashtags, pos):
+def data_to_db(db, start_time, counts, keywords, hashtags, pos, tracking_word, related_keywords_tb):
 	# Store counts
 	counts_t = []
 	for i in range(min(len(counts), len(start_time))):
@@ -100,7 +100,8 @@ def data_to_db(db, start_time, counts, keywords, hashtags, pos):
 	db['counts'].insert(counts_js)
 	# Store keywords
 	collection = db['keywords']
-	db['keywords'].insert(keywords)
+	if related_keywords_tb:
+		db['keywords'].insert(keywords)
 	# Store hashtags
 	collection = db['hashtags']
 	db['hashtags'].insert(hashtags)
@@ -115,6 +116,11 @@ def data_to_db(db, start_time, counts, keywords, hashtags, pos):
 	ratio_js = json.loads(ratio_df.reset_index().to_json(orient='records'))
 	collection = db['ratio']
 	db['ratio'].insert(ratio_js)
+	# Store tracking_word
+	tracking_word_df = pd.DataFrame([tracking_word], columns=['Tracking_word'])
+	tracking_word_js = json.loads(tracking_word_df.reset_index().to_json(orient='records'))
+	collection = db['tracking_word']
+	db['tracking_word'].insert(tracking_word_js)
 
 def parseLine(line):
 	parts = line.split('\t')
@@ -126,7 +132,7 @@ def parseLine(line):
 	return (label, words)
 
 
-def main(sc, db):
+def main(sc, db, tracking_word):
 
 	print('>'*30+'SPARK START'+'>'*30)
 
@@ -239,6 +245,9 @@ def main(sc, db):
 		if len(sqlContext.tables().filter("tableName LIKE 'related_keywords_tmp'").collect()) == 1:
 			top_words = sqlContext.sql( 'Select Keyword, Count from related_keywords_tmp' )		
 			related_keywords_df = related_keywords_df.unionAll(top_words)
+			related_keywords_tb = True
+		else:
+			related_keywords_tb = False
 
 		# Find the top related hashtags
 		if len(sqlContext.tables().filter("tableName LIKE 'related_hashtags_tmp'").collect()) == 1:
@@ -249,18 +258,21 @@ def main(sc, db):
 		process_cnt += 1
 		
 	# Final tables	
-	related_keywords_df = related_keywords_df.filter(related_keywords_df['Keyword'] != 'none')	
-	# Spark SQL to Pandas Dataframe
-	related_keywords_pd = related_keywords_df.toPandas()
-	related_keywords_pd = related_keywords_pd.groupby(related_keywords_pd['Keyword']).sum()
-	related_keywords_pd = pd.DataFrame(related_keywords_pd)
-	related_keywords_pd = related_keywords_pd.sort("Count", ascending=0).iloc[0:9]
+	if related_keywords_tb:
+		related_keywords_df = related_keywords_df.filter(related_keywords_df['Keyword'] != 'none')	
+		# Spark SQL to Pandas Dataframe
+		related_keywords_pd = related_keywords_df.toPandas()
+		related_keywords_pd = related_keywords_pd[related_keywords_pd['Keyword'] != tracking_word]
+		related_keywords_pd = related_keywords_pd.groupby(related_keywords_pd['Keyword']).sum()
+		related_keywords_pd = pd.DataFrame(related_keywords_pd)
+		related_keywords_pd = related_keywords_pd.sort("Count", ascending=0).iloc[0:min(9, related_keywords_pd.shape[0])]	
 
 	# Spark SQL to Pandas Dataframe
-	related_hashtags_pd = related_hashtags_df.toPandas() 
+	related_hashtags_pd = related_hashtags_df.toPandas()
+	related_hashtags_pd = related_hashtags_pd[related_hashtags_pd['Hashtag'] != '#'+tracking_word] 
 	related_hashtags_pd = related_hashtags_pd.groupby(related_hashtags_pd['Hashtag']).sum()
 	related_hashtags_pd = pd.DataFrame(related_hashtags_pd)
-	related_hashtags_pd = related_hashtags_pd.sort("Count", ascending=0).iloc[0:9]	
+	related_hashtags_pd = related_hashtags_pd.sort("Count", ascending=0).iloc[0:min(9, related_hashtags_pd.shape[0])]
 
 	ssc.stop()
 	###########################################################################
@@ -268,15 +280,19 @@ def main(sc, db):
 	print(tweet_cnt_li)
 	print(start_time)
 	print(pos_cnt_li)
+	print(related_keywords_tb)
 	#print(related_keywords_pd.head(10))
 	#print(related_hashtags_pd.head(10))
-	related_keywords_js = json.loads(related_keywords_pd.reset_index().to_json(orient='records'))
+	if related_keywords_tb:
+		related_keywords_js = json.loads(related_keywords_pd.reset_index().to_json(orient='records'))
+	else:
+		related_keywords_js = None
 	#print(related_keywords_js)
 	related_hashtags_js = json.loads(related_hashtags_pd.reset_index().to_json(orient='records'))
 	#print(related_hashtags_js)
 
 	# Store the data to MongoDB
-	data_to_db(db, start_time, tweet_cnt_li, related_keywords_js, related_hashtags_js, pos_cnt_li)
+	data_to_db(db, start_time, tweet_cnt_li, related_keywords_js, related_hashtags_js, pos_cnt_li, tracking_word, related_keywords_tb)
 
 	print('>'*30+'SPARK STOP'+'>'*30)
 
@@ -297,6 +313,7 @@ if __name__=="__main__":
 	# Load parameters
 	with open('conf/parameters.json') as f:
 		p = json.load(f)
+		tracking_word = p['hashtag'][1:]
 		batch_interval = int(p['DStream']['batch_interval'])
 		window_time = int(p['DStream']['window_time'])
 		process_times = int(p['DStream']['process_times'])
@@ -308,6 +325,7 @@ if __name__=="__main__":
 	db['keywords'].drop()
 	db['hashtags'].drop()
 	db['ratio'].drop()
+	db['tracking_word'].drop()
 	# Execute main function
-	main(sc, db)
+	main(sc, db, tracking_word)
 
