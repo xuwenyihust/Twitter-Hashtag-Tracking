@@ -62,12 +62,11 @@ python3.4 web/dashboard.py
 * Use **MongoDB** to store the analysis results
 
 ### Visualization
+The **dashboard**
+
 **Time line** of related tweet counts, **most related hashtags**, **most related keywords**, the ratio of **postive/negative** tweets.
 <p align="justify">
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/timeline.JPG" width="200"/>
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/hashtags.JPG" width="200"/>
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/keywords.JPG" width="200"/>
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/ratio.JPG" width="150"/>
+  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/dashboard.png" width="500"/>
 </p>
 
 ## Prerequisite
