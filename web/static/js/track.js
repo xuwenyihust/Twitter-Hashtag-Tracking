@@ -6,7 +6,7 @@ var track = d3.select("#track").append("svg")
               .attr("height", 120)
               .append("g")
               .attr("transform",
-                    "translate(" + 40 + "," + 70 + ")");
+                    "translate(" + 20 + "," + 70 + ")");
 var tr = ''
 // load the data
 d3.json("data/tracking_word", function(error, data) {

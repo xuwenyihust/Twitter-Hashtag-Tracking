@@ -6,7 +6,7 @@ var total = d3.select("#total").append("svg")
     .attr("height", 120)
     .append("g")
     .attr("transform",
-          "translate(" + 40 + "," + 70 + ")");
+          "translate(" + 20 + "," + 70 + ")");
 
 var t = 0
 // load the data

@@ -13,9 +13,14 @@ var count_y = d3.scale.linear().range([count_height, 0]);
 var count_xAxis = d3.svg.axis()
     .scale(count_x)
     .orient("bottom")
+    //.tickSize(-count_height, 0, 0)
+    .outerTickSize(0);
+
 var count_yAxis = d3.svg.axis()
     .scale(count_y)
     .orient("left")
+    .tickSize(-count_width, 0, 0)
+    .outerTickSize(0)
     .ticks(10);
 
 // Define the div for the tooltip
@@ -31,6 +36,7 @@ var count = d3.select("#count").append("svg")
   .append("g")
     .attr("transform",
           "translate(" + count_margin.left + "," + count_margin.top + ")");
+
 
 // load the data
 d3.json("/data/counts", function(error, data) {
@@ -52,6 +58,7 @@ d3.json("/data/counts", function(error, data) {
       .attr("dx", "-.8em")
       .attr("dy", "-.55em")
       .attr("transform", "rotate(-90)" );
+
   count.append("g")
       .attr("class", "y axis")
       .call(count_yAxis)
@@ -62,8 +69,9 @@ d3.json("/data/counts", function(error, data) {
       .style("text-anchor", "end")
       .text("Count");
 
+
     var line = d3.svg.line()
-            .x(function(d) { return 5+count_x(d.Time); })
+            .x(function(d) { return 9+count_x(d.Time); })
             .y(function(d) { return count_y(d.Count);});
 
 
@@ -77,7 +85,7 @@ d3.json("/data/counts", function(error, data) {
     .data(data)	
     .enter().append("circle")
     .attr("r", 3)
-    .attr("cx", function(d) { return 5+count_x(d.Time); })
+    .attr("cx", function(d) { return 9+count_x(d.Time); })
     .attr("cy", function(d) { return count_y(d.Count); })
     .style("fill", "blue")	
 

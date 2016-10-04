@@ -1,6 +1,18 @@
 body.application{
 	background: #f2f2f2;
-	padding: 60px 20px 0;
+	padding: 0px 0px 0px;
+}
+
+body.application p[class^="summary"] {
+  padding: 0 45px 0;
+}
+
+body.application p[class^="sub-summary"] {
+  padding: 0 45px 5px;
+}
+
+body.application div[class^="row"] {
+	padding: 0 50px 0;
 }
 
 body.application > .container-fluid {
@@ -17,22 +29,33 @@ body.application div[class^="col-"] div[class^="col-"] {
 	padding-right: 15px;
 }
 
-body.application hr {
-	border-color: #d7d7d7;
-	margin: 10px 0;
+p.summary {
+	font-size: 200%;
+	color: black;
+	opacity: .8;
+}
+p.sub-summary {
+  font-size: 100%;
+  color: black;
+	opacity: .5;
 }
 
-.navbar-inverse {
-	background-color: blue;
-	border-color: blue;
+.navbar-inverse .container-fluid {
+	background-color: #1E90FF;
+	border-color: #1E90FF;
+  padding: 10px 8px 10px;
 }
 
 .navbar-inverse .navbar-nav > li > a,
-
-
 .navbar a.navbar-brand {
-	color: #fbfbfb;
+	color: white;
 	text-decoration: none;
+	font-size: 180%;
+}
+
+.navbar p.navbar-text {
+  color: white;
+  text-decoration: none;
 }
 
 .bar{
@@ -48,12 +71,13 @@ body.application hr {
 }
 
 .axis path,
-
 .axis line {
 	fill: none;
-	stroke: #000;
+	stroke: black;
+	opacity: 0.3;
 	shape-rendering: crispEdges;
 }
+
  
 .path_line {
 	fill: none;
@@ -66,6 +90,14 @@ body.application hr {
 	stroke-width: 3;
 }
 
+.tick text{
+	font-size: 10px;
+}
+
+.tick line{
+  stroke: blue;
+	opacity: 0.2;
+}
 
 .chart_wrapper {
 	background: #fff;
@@ -75,9 +107,9 @@ body.application hr {
 }
 
 .chart_wrapper .chart_title {
-	border-bottom: 1px solid #d7d7d7;
+	border-bottom: 1px solid white;
 	padding: 7px 10px 4px;
-	font: 16px;
+	font-size: 120%;
 }
 
 .chart_wrapper .chart_stage {
@@ -87,8 +119,8 @@ body.application hr {
 }
 
 .chart_wrapper .text_stage {
-	font: 20px;
-	padding: 5px 10px;
+	font: 18px;
+	padding: 0px 10px;
 	position: relative;
 }
 

@@ -18,6 +18,7 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
+    //.tickSize(-width, 0, 0)
     .ticks(10);
 // add the SVG element
 var keyword = d3.select("#keyword").append("svg") 
