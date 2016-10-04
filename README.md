@@ -66,7 +66,7 @@ The **dashboard**
 
 **Time line** of related tweet counts, **most related hashtags**, **most related keywords**, the ratio of **postive/negative** tweets.
 <p align="justify">
-  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/dashboard.png" width="800"/>
+  <img src="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking/blob/master/img/dashboard.png" width="900"/>
 </p>
 
 ## Prerequisite
