@@ -53,11 +53,8 @@ d3.json("/data/ratio", function(error, data) {
 
    arcs.append("text")
      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-     //.attr("dy", ".35em")
      .attr("dy", "0em")
      .text(function(d) { return d.data.PN; });
-     //.text(pn);
-     //.text("P");
 });
 
 
