@@ -7,21 +7,18 @@ var track = d3.select("#track").append("svg")
               .append("g")
               .attr("transform",
                     "translate(" + 40 + "," + 70 + ")");
-
-track.append("text")
-     .text("#overwatch")
-     .style("font-size","50px");
-
+var tr = ''
 // load the data
-//d3.json("../../conf/parameters.json", function(error, data) {
-//    data.forEach(function(d) {
-//        d.hashtag = d.hashtag;
-//    });
+d3.json("data/tracking_word", function(error, data) {
+    data.forEach(function(d) {
+        tr = d.Tracking_word;
+    });
 
-  //track.text(d.hashtag)
-//  track.text("#overwatch");
 
-//});
+  track.append("text") 
+       .text(tr)
+       .style("font-size","50px");
+});
 
 
 

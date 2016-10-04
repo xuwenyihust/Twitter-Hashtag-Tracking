@@ -45,7 +45,7 @@ d3.json("/data/keywords", function(error, data) {
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
       .attr("dy", "-.55em")
-      .attr("transform", "rotate(-90)" );
+      .attr("transform", "rotate(-35)" );
   keyword.append("g")
       .attr("class", "y axis")
       .call(yAxis)
