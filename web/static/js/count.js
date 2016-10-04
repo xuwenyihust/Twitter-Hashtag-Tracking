@@ -18,6 +18,12 @@ var count_yAxis = d3.svg.axis()
     .orient("left")
     .ticks(10);
 
+// Define the div for the tooltip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+
 // add the SVG element
 var count = d3.select("#count").append("svg")
     .attr("width", count_width + count_margin.left + count_margin.right)
@@ -66,6 +72,34 @@ d3.json("/data/counts", function(error, data) {
     .enter().append("path")
     .attr("class", "path_line") 
     .attr("d", line(data));
+
+  count.selectAll("dot")
+    .data(data)	
+    .enter().append("circle")
+    .attr("r", 3)
+    .attr("cx", function(d) { return 5+count_x(d.Time); })
+    .attr("cy", function(d) { return count_y(d.Count); })
+    .style("fill", "blue")	
+
+    .on("mouseover", function(d) {		
+      div.transition()		
+         .duration(50)		
+         .style("opacity", 0);
+
+      div.transition()
+         .duration(20)
+         .style("opacity", .9);		
+
+      div.html(d.Count + "<br/>"  + d.Time)	
+         .style("left", (d3.event.pageX) + "px")		
+         .style("top", (d3.event.pageY - 28) + "px");	
+     })
+					
+    .on("mouseout", function(d) {		
+      div.transition()		
+         .duration(5000)		
+         .style("opacity", 0);	
+    });
 
 });
 
