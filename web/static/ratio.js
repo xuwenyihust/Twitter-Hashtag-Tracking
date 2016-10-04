@@ -14,9 +14,15 @@ var ratio = d3.select("#ratio").append("svg")
     .attr("transform",
           "translate(" + ratio_width  + "," + ratio_height/2 + ")");
 
+var labelArc = d3.svg.arc()
+    .outerRadius(90)
+    .innerRadius(0);
+
+
 var pie = d3.layout.pie()
     .sort(null)
     .value(function(d) { return d.Ratio; });
+
 
 
 var arc = d3.svg.arc()
@@ -26,10 +32,10 @@ var arc = d3.svg.arc()
 var color = d3.scale.category10();
 
 // load the data
+var pn = 0
 d3.json("/data/ratio", function(error, data) {
     data.forEach(function(d) {
-        d.Pos = d.Ratio;
-	d.Neg = 1-d.Ratio;
+        d.PN = d.PN;
     }); 
 
 
@@ -45,9 +51,14 @@ d3.json("/data/ratio", function(error, data) {
      })
      .attr("d", arc);
 
-
+   arcs.append("text")
+     .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+     //.attr("dy", ".35em")
+     .attr("dy", "0em")
+     .text(function(d) { return d.data.PN; });
+     //.text(pn);
+     //.text("P");
 });
-
 
 
 
