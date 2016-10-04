@@ -44,6 +44,7 @@ p.sub-summary {
 	background-color: #1E90FF;
 	border-color: #1E90FF;
   padding: 10px 8px 10px;
+	opacity: .9;
 }
 
 .navbar-inverse .navbar-nav > li > a,
