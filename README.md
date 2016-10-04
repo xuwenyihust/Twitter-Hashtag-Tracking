@@ -1,6 +1,6 @@
 ![Python 3.4](https://img.shields.io/badge/python-3.4-green.svg)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
-![release v1.0](https://img.shields.io/badge/release-v1.1-red.svg)
+![release v1.2](https://img.shields.io/badge/release-v1.2-red.svg)
 # Twitter Hashtag Tracking
 
 ## Motivation
