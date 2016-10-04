@@ -13,7 +13,7 @@ Modify the conf/parameters.json file to set the parameters.
 { "hashtag": "#overwatch",
   "DStream": { "batch_interval": "10",
                "window_time": "10",
-               "process_times": "10" }
+               "process_times": "60" }
 }
 ```
 ### MongoDB Database
