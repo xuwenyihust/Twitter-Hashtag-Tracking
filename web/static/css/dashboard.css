@@ -3,21 +3,18 @@ body.application{
 	padding: 0px 0px 0px;
 }
 
-body.application p[class^="summary"] {
-  padding: 0 45px 0;
-}
-
-body.application p[class^="sub-summary"] {
-  padding: 0 45px 5px;
-}
-
 body.application div[class^="row"] {
-	padding: 0 50px 0;
+	padding-left: 20px;
 }
 
 body.application > .container-fluid {
 	padding-left: 0px;
 	padding-right: 0px;
+}
+
+body.application > .container {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 body.application div[class^="col-"] {
@@ -29,21 +26,23 @@ body.application div[class^="col-"] div[class^="col-"] {
 	padding-right: 15px;
 }
 
-p.summary {
+body.application p.summary {
 	font-size: 200%;
 	color: black;
 	opacity: .8;
+	padding-left: 80px;
 }
-p.sub-summary {
+
+body.application p.sub-summary {
   font-size: 100%;
   color: black;
 	opacity: .5;
+	padding-left: 80px;
 }
 
-.navbar-inverse .container-fluid {
-	background-color: #1E90FF;
-	border-color: #1E90FF;
-  padding: 10px 8px 10px;
+.navbar-default .container-fluid {
+	background-color: #3d4a57;
+	padding: 10px 8px 10px;
 	opacity: .9;
 }
 
@@ -57,6 +56,7 @@ p.sub-summary {
 .navbar p.navbar-text {
   color: white;
   text-decoration: none;
+  font-size: 100%;
 }
 
 .bar{
@@ -108,7 +108,7 @@ p.sub-summary {
 }
 
 .chart_wrapper .chart_title {
-	border-bottom: 1px solid white;
+	border-bottom: 1px solid #c9c4c4;
 	padding: 7px 10px 4px;
 	font-size: 120%;
 }
