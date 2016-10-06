@@ -30,14 +30,14 @@ body.application p.summary {
 	font-size: 200%;
 	color: black;
 	opacity: .8;
-	padding-left: 80px;
+	padding-left: 0px;
 }
 
 body.application p.sub-summary {
   font-size: 100%;
   color: black;
 	opacity: .5;
-	padding-left: 80px;
+	padding-left: 0px;
 }
 
 .navbar-default .container-fluid {
@@ -51,12 +51,18 @@ body.application p.sub-summary {
 	color: white;
 	text-decoration: none;
 	font-size: 180%;
+	font-family: Arial;
 }
 
 .navbar p.navbar-text {
   color: white;
   text-decoration: none;
   font-size: 100%;
+	font-family: Arial;
+}
+
+.icon {
+	padding-left: 20px;
 }
 
 .bar{
@@ -109,8 +115,14 @@ body.application p.sub-summary {
 
 .chart_wrapper .chart_title {
 	border-bottom: 1px solid #c9c4c4;
+	opacity: .8;
 	padding: 7px 10px 4px;
-	font-size: 120%;
+	font-size: 130%;
+	font-family: Arial;
+}
+
+.chart_wrapper .chart_title i{
+	padding-left: 0px;
 }
 
 .chart_wrapper .chart_stage {
@@ -124,7 +136,6 @@ body.application p.sub-summary {
 	padding: 0px 10px;
 	position: relative;
 }
-
 
 
 

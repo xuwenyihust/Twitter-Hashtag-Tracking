@@ -6,6 +6,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 
 
@@ -15,107 +16,134 @@
 		<div class="container-fluid">
  	  	<div class="navbar-header">
         <a class="navbar-brand" href="./">Real-Time Twitter Analysis</a>
-				<p class="navbar-text">Wenyi Xu</p>
+				<p class="navbar-text">Wenyi Xu</p>	
       </div> 
 		</div>
 	</div>
 
 
-
-  <p class="summary">
-    Dashboard
-  </p>
-	<p class="sub-summary">
-    Track tweets filtered by specific hashtag and do real-time analysis using Spark Streaming. 
-  </p>
-
 	<div class="container">
-
-	<div class="row">
-
-		<div class="col-sm-8">
-			<div class="chart_wrapper">
-				<div class="chart_title">
-        	Tweet Counts Timeline 
-      	</div>
-				<div class="chart_stage" id="count">
-  				<script src="static/js/count.js"></script>	
-				</div>
-			</div>			
-		</div>	
-
-		<div class="col-sm-2">
-			<div class="chart_wrapper">
-				<div class="chart_title">
-					Num of Tweets
-				</div>
-				<div class="chart_stage" id="total">
-					<script src="static/js/total.js"></script>
-				</div>
+		<div class="row">
+			<div class="col-sm-8">	
+  			<p class="summary">
+    			Dashboard
+  			</p>
+				<p class="sub-summary">
+    			Track tweets filtered by specific hashtag and do real-time analysis using Spark Streaming. 
+  			</p>
 			</div>
-		</div>	
 
-		<div class="col-sm-2">
-			<div class="chart_wrapper">	
-				<div class="chart_title">
-					Total Time	
-				</div>
- 				<div class="chart_stage" id="time">
-					<script src="static/js/time.js"></script>	
-				</div>
-			</div>
-		</div>
+			<div class="col-sm-2">
+			</div>	
 		
-		<div class="col-sm-2">
-			<div class="chart_wrapper">
-				<div class="chart_title">
-					Tracked Hashtag
+			<div class="col-sm-1">
+				<div class="icon">
+					<a class="fa fa-github" href="https://github.com/xuwenyihust/Twitter-Hashtag-Tracking" style="font-size:36px"></a>	
 				</div>
-				<div class="text_stage" id="track">
-					<script src="static/js/track.js"></script>
+			</div>
+			<div class="col-sm-1">
+				<div class="icon">
+					<a class="fa fa-twitter" href="https://twitter.com/wenyixu101?lang=en"  style="font-size:36px"></a>
 				</div>
 			</div>
 		</div>
 
-	</div>
+
+		<div class="row">
+
+			<div class="col-sm-8">
+				<div class="chart_wrapper">
+					<div class="chart_title">
+        		Tweet Counts Timeline
+						<i class="fa fa-line-chart pull-right" aria-hidden="true" style="font-size:18px"></i> 
+      		</div>
+					<div class="chart_stage" id="count">
+  					<script src="static/js/count.js"></script>	
+					</div>
+				</div>			
+			</div>	
+
+			<div class="col-sm-2">
+				<div class="chart_wrapper">
+					<div class="chart_title">
+						Num of Tweets
+						<i class="fa fa-comment pull-right" aria-hidden="true" style="font-size:18px"></i>
+					</div>
+					<div class="chart_stage" id="total">
+						<script src="static/js/total.js"></script>
+					</div>
+				</div>
+			</div>	
+
+			<div class="col-sm-2">
+				<div class="chart_wrapper">	
+					<div class="chart_title">
+						Total Time
+						<i class="fa fa-clock-o pull-right" aria-hidden="true" style="font-size:18px"></i>	
+					</div>
+ 					<div class="chart_stage" id="time">
+						<script src="static/js/time.js"></script>	
+					</div>
+				</div>
+			</div>
+		
+			<div class="col-sm-2">
+				<div class="chart_wrapper">
+					<div class="chart_title">
+						Tracked Hashtag
+						<i class="fa fa-tag pull-right" aria-hidden="true" style="font-size:18px"></i>
+					</div>
+					<div class="text_stage" id="track">
+						<script src="static/js/track.js"></script>
+					</div>
+				</div>
+			</div>
+
+		<div class="col-sm-2">
+			<img src="static/img/icon.png" height="165" width="185">
+		</div>
+
+		</div>
 	
-	<div class="row">
+		<div class="row">
 
-    <div class="col-sm-4">
-			<div class="chart_wrapper">
-        <div class="chart_title">
-          Most Related Keywords
-        </div>
-        <div class="chart_stage" id="keyword">
-          <script src="static/js/keyword.js"></script>
-        </div>
-      </div>
-    </div>
+    	<div class="col-sm-4">
+				<div class="chart_wrapper">
+        	<div class="chart_title">
+          	Most Related Keywords
+						<i class="fa fa-bar-chart pull-right" aria-hidden="true" style="font-size:18px"></i>
+        	</div>
+        	<div class="chart_stage" id="keyword">
+          	<script src="static/js/keyword.js"></script>
+        	</div>
+      	</div>
+    	</div>
 
-		<div class="col-sm-4">
-      <div class="chart_wrapper">
-        <div class="chart_title">
-          Most Related Hashtags
-        </div>
-        <div class="chart_stage" id="hashtag">
-          <script src="static/js/hashtag.js"></script>
-        </div>
-      </div>
-    </div>
+			<div class="col-sm-4">
+      	<div class="chart_wrapper">
+        	<div class="chart_title">
+          	Most Related Hashtags
+						<i class="fa fa-bar-chart pull-right" aria-hidden="true" style="font-size:18px"></i>
+        	</div>
+        	<div class="chart_stage" id="hashtag">
+          	<script src="static/js/hashtag.js"></script>
+        	</div>
+      	</div>
+    	</div>
 
-		<div class="col-sm-4">
-      <div class="chart_wrapper">
-        <div class="chart_title">
-          Pos/Neg Ratio
-        </div>
-        <div class="chart_stage" id="ratio">
-          <script src="static/js/ratio.js"></script>
-        </div>
-      </div>
-    </div>
+			<div class="col-sm-4">
+      	<div class="chart_wrapper">
+        	<div class="chart_title">
+          	Sentiment
+						<i class="fa fa-pie-chart pull-right" aria-hidden="true" style="font-size:18px"></i>
+        	</div>
+        	<div class="chart_stage" id="ratio">
+          	<script src="static/js/ratio.js"></script>
+        	</div>
+      	</div>
+    	</div>
 
-  </div>
-
+  	</div>
 
 	</div>
        

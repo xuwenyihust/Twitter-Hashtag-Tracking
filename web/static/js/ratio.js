@@ -2,7 +2,7 @@
 //
 // Ratio Chart
 //
-var ratio_margin = {top: 20, right: 100, bottom: 30, left: 160},
+var ratio_margin = {top: 20, right: 100, bottom: 30, left: 120},
     ratio_width = 400 - ratio_margin.left - ratio_margin.right,
     ratio_height = 300 - ratio_margin.top - ratio_margin.bottom;
 
