@@ -54,10 +54,12 @@ body.application p.sub-summary {
 	font-family: Arial;
 }
 
-.navbar p.navbar-text {
+.navbar ul.navbar-nav {
   color: white;
+	padding-right: 5%;
+	padding-top: 7px;
   text-decoration: none;
-  font-size: 100%;
+  font-size: 180%;
 	font-family: Arial;
 }
 

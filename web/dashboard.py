@@ -14,12 +14,15 @@ COLLECTION_NAME1 = 'hashtags'
 COLLECTION_NAME2 = 'counts'
 COLLECTION_NAME3 = 'ratio'
 COLLECTION_NAME4 = 'tracking_word'
+COLLECTION_NAME5 = 'users'
+COLLECTION_NAME6 = 'time'
 FIELDS0 = {'Keyword': True, 'Count': True, '_id': False}
 FIELDS1 = {'Hashtag': True, 'Count': True, '_id': False}
 FIELDS2 = {'_id': False}
 FIELDS3 = {'_id': False}
 FIELDS4 = {'_id': False}
-
+FIELDS5 = {'_id': False}
+FIELDS6 = {'_id': False}
 
 app = Flask(__name__)
 
@@ -82,6 +85,30 @@ def tracking_word():
         connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
         collection = connection[DBS_NAME][COLLECTION_NAME4]
         projects = collection.find(projection=FIELDS4)
+        json_projects = []
+        for project in projects:
+                json_projects.append(project)
+        json_projects = json.dumps(json_projects, default=json_util.default)
+        connection.close()
+        return json_projects
+
+@app.route("/data/users")
+def users():
+        connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = connection[DBS_NAME][COLLECTION_NAME5]
+        projects = collection.find(projection=FIELDS5)
+        json_projects = []
+        for project in projects:
+                json_projects.append(project)
+        json_projects = json.dumps(json_projects, default=json_util.default)
+        connection.close()
+        return json_projects
+
+@app.route("/data/time")
+def time():
+        connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = connection[DBS_NAME][COLLECTION_NAME6]
+        projects = collection.find(projection=FIELDS6)
         json_projects = []
         for project in projects:
                 json_projects.append(project)

@@ -19,9 +19,17 @@ from pymongo import MongoClient
 
 
 def tweet_count(lines):
-	tweet_cnt = lines.map(lambda line: 1) \
+	tweet_cnt = lines.flatMap(lambda line: line.split('---')) \
+					.map(lambda line: 1) \
                     .reduce(lambda x,y: x+y)
 	tweet_cnt.foreachRDD(lambda x: tweet_cnt_li.extend(x.collect()))
+
+def user_count(lines):
+	user_cnt = lines.flatMap(lambda line: line.split('---')) \
+				 .map(lambda line: line[:line.find('+++')]) 
+
+	#user_cnt.pprint()	
+	user_cnt.foreachRDD(lambda x: user_cnt_li.extend(x.distinct().collect()))	
 
 
 def related_keywords(lines):
@@ -48,6 +56,7 @@ def related_keywords(lines):
                 .map(lambda line: line.replace('-', '')) \
                 .map(lambda line: line.replace('\\', '')) \
                 .map(lambda line: line.replace('/', '')) \
+				.map(lambda line: line.replace('+', '')) \
                 .flatMap(lambda line: line.split()) \
                 .map(lambda word: word.lower()) \
                 .map(lambda word: word if word not in stop_words else 'none') \
@@ -85,8 +94,11 @@ def sentiment_analysis(lines, model, hashingTF, iDF):
 	analysis.foreachRDD(lambda x: pos_cnt_li.extend(x.collect()))	
 
 
-def data_to_db(db, start_time, counts, keywords, hashtags, pos, tracking_word, related_keywords_tb):
-	# Store counts
+def data_to_db(db, start_time, counts, user_cnt_len_li, keywords, hashtags, pos, tracking_word, related_keywords_tb):
+	# 1) Store counts
+	# Complement the counts list
+	#if len(counts) < len(start_time):
+	#	counts.extend([0]*(len(start_time)-len(counts)))
 	counts_t = []
 	for i in range(min(len(counts), len(start_time))):
 		print(str(start_time[i]))
@@ -98,25 +110,37 @@ def data_to_db(db, start_time, counts, keywords, hashtags, pos, tracking_word, r
 	#print(counts_t)	
 	collection = db['counts']
 	db['counts'].insert(counts_js)
-	# Store keywords
+	# 2) Store users
+	users_df = pd.DataFrame([user_cnt_len_li], columns=['Users'])
+	users_js = json.loads(users_df.reset_index().to_json(orient='records'))
+	collection = db['users']
+	db['users'].insert(users_js)
+	# 3) Store time
+	time_df = pd.DataFrame([total_time], columns=['Time'])
+	time_js = json.loads(time_df.reset_index().to_json(orient='records'))
+	collection = db['time']
+	db['time'].insert(time_js)
+	# 4) Store keywords
 	collection = db['keywords']
 	if related_keywords_tb:
 		db['keywords'].insert(keywords)
-	# Store hashtags
+	# 5) Store hashtags
 	collection = db['hashtags']
 	db['hashtags'].insert(hashtags)
-	# Store ratio
+	# 6) Store ratio
 	whole = sum(counts[:len(pos)])
 	pos_whole = sum(pos)
-	#print(whole)
-	#print(pos)
-	pos = 1.0*pos_whole/whole	
+	# Prevent divide 0:
+	if whole:
+		pos = 1.0*pos_whole/whole	
+	else:
+		pos = 1
 	neg = 1-pos
 	ratio_df = pd.DataFrame([(pos, 'P'), (neg, 'N')], columns=['Ratio', 'PN'])
 	ratio_js = json.loads(ratio_df.reset_index().to_json(orient='records'))
 	collection = db['ratio']
 	db['ratio'].insert(ratio_js)
-	# Store tracking_word
+	# 7) Store tracking_word
 	tracking_word_df = pd.DataFrame([tracking_word], columns=['Tracking_word'])
 	tracking_word_js = json.loads(tracking_word_df.reset_index().to_json(orient='records'))
 	collection = db['tracking_word']
@@ -218,15 +242,18 @@ def main(sc, db, tracking_word):
 	related_hashtags_df = sqlContext.createDataFrame(tmp, ['Hashtag', 'Count'])
 
 	# 1) Count the number of tweets
-	tweet_count(lines)
+	tweet_count(lines)	
 
-	# 2) Find the related keywords
+	# 2) Count the number of users
+	user_count(lines)
+
+	# 3) Find the related keywords
 	related_keywords(lines)
 
-	# 3) Find the related hashtags
+	# 4) Find the related hashtags
 	related_hashtags(lines)
 
-	# 4) Sentiment analysis
+	# 5) Sentiment analysis
 	sentiment_analysis(lines, model, hashingTF, iDF)
 	
 	###########################################################################
@@ -237,9 +264,7 @@ def main(sc, db, tracking_word):
 	start_time = [datetime.datetime.now()]
 
 	while process_cnt < process_times:
-		time.sleep(window_time)		
-		#print('Count:')
-		#print(tweet_cnt_li)		
+		time.sleep(window_time)			
 		start_time.append(datetime.datetime.now())	
 		# Find the top related keywords
 		if len(sqlContext.tables().filter("tableName LIKE 'related_keywords_tmp'").collect()) == 1:
@@ -277,9 +302,16 @@ def main(sc, db, tracking_word):
 	ssc.stop()
 	###########################################################################
 
+	print(">>>tweet_cnt_li:")
 	print(tweet_cnt_li)
+	print(">>>user_cnt_li:")
+	user_cnt_len_li = len(user_cnt_li)
+	print(user_cnt_len_li)
+	print(">>>start_time:")
 	print(start_time)
+	print(">>>pos_cnt_li")
 	print(pos_cnt_li)
+	print(">>>related_keywords_tb")
 	print(related_keywords_tb)
 	#print(related_keywords_pd.head(10))
 	#print(related_hashtags_pd.head(10))
@@ -292,7 +324,7 @@ def main(sc, db, tracking_word):
 	#print(related_hashtags_js)
 
 	# Store the data to MongoDB
-	data_to_db(db, start_time, tweet_cnt_li, related_keywords_js, related_hashtags_js, pos_cnt_li, tracking_word, related_keywords_tb)
+	data_to_db(db, start_time, tweet_cnt_li, user_cnt_len_li, related_keywords_js, related_hashtags_js, pos_cnt_li, tracking_word, related_keywords_tb)
 
 	print('>'*30+'SPARK STOP'+'>'*30)
 
@@ -309,6 +341,7 @@ if __name__=="__main__":
 	sqlContext = SQLContext(sc)
 	# Initialize the tweet_cnt_li
 	tweet_cnt_li = []
+	user_cnt_li = []
 	pos_cnt_li = []
 	# Load parameters
 	with open('conf/parameters.json') as f:
@@ -317,11 +350,15 @@ if __name__=="__main__":
 		batch_interval = int(p['DStream']['batch_interval'])
 		window_time = int(p['DStream']['window_time'])
 		process_times = int(p['DStream']['process_times'])
+	# Compute the whole time for displaying
+	total_time = batch_interval * process_times
 	# Connect to the running mongod instance
 	conn = MongoClient()
 	# Switch to the database
 	db = conn['twitter']
 	db['counts'].drop()
+	db['users'].drop()
+	db['time'].drop()
 	db['keywords'].drop()
 	db['hashtags'].drop()
 	db['ratio'].drop()

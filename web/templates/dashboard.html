@@ -15,9 +15,11 @@
 	<div class="navbar navbar-default navbar-static-top" role="navigation">
 		<div class="container-fluid">
  	  	<div class="navbar-header">
-        <a class="navbar-brand" href="./">Real-Time Twitter Analysis</a>
-				<p class="navbar-text">Wenyi Xu</p>	
+        <a class="navbar-brand" href="./">Real-Time Twitter Analysis</a>	
       </div> 
+			<ul class="nav navbar-nav navbar-right">
+				WenyiXu
+			<ul/>
 		</div>
 	</div>
 
@@ -66,7 +68,7 @@
 			<div class="col-sm-2">
 				<div class="chart_wrapper">
 					<div class="chart_title">
-						Num of Tweets
+						Total Tweets
 						<i class="fa fa-comment pull-right" aria-hidden="true" style="font-size:18px"></i>
 					</div>
 					<div class="chart_stage" id="total">
@@ -100,7 +102,15 @@
 			</div>
 
 		<div class="col-sm-2">
-			<img src="static/img/icon.png" height="165" width="185">
+			<div class="chart_wrapper">
+				<div class="chart_title">
+					Total Users
+					<i class="fa fa-users pull-right" aria-hidden="true" style="font-size:18px"></i>
+				</div>
+				<div class="text_stage" id="user">
+					<script src="static/js/user.js"></script>
+				</div>
+			</div>	
 		</div>
 
 		</div>

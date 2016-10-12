@@ -18,14 +18,16 @@ class listener(StreamListener):
 		# Increment the counter
 		#self.counter += 1
 		try:
+			username = tweetdict['user']['name'].encode('utf-8')
 			text = tweetdict['text'].encode('utf-8')
+			msg = '---'.encode('utf-8') + username + '+++'.encode('utf-8') + text
 			#username = tweetdict['user']['screen_name']
 			#hashdict = tweetdict['entities']['hashtags']
 			#urldict = tweetdict['entities']['urls']
 			#userdict = tweetdict['entities']['user_mentions']
 			#tweet = [text, username, hashdict, urldict, userdict]
-			print(text)
-			self.client_socket.send(text)
+			print(msg)
+			self.client_socket.send(msg)
 		except KeyError:
 			print('Error.')
 

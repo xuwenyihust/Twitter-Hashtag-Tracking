@@ -11,11 +11,13 @@ Track specific hashtags or keywords in Twitter, do real-time analysis on the twe
 Modify the conf/parameters.json file to set the parameters.
 ```json
 { "hashtag": "#overwatch",
-  "DStream": { "batch_interval": "10",
-               "window_time": "10",
+  "DStream": { "batch_interval": "60",
+               "window_time": "60",
                "process_times": "60" }
 }
 ```
+**Suggestion**: Set batch_interval and window_time the multiple of 60.
+
 ### MongoDB Database
 Start a mongod process
 ```
