@@ -27,6 +27,12 @@ var keyword = d3.select("#keyword").append("svg")
     .append("g")
     .attr("transform", 
           "translate(" + margin.left + "," + margin.top + ")");
+
+// Prep the tooltip bits, initial display is hidden
+var tooltip_key = d3.select('body').append("keyword")
+  .attr("class", "tooltip")
+  .style("opacity", 0); 
+    
 // load the data
 d3.json("/data/keywords", function(error, data) {
     data.forEach(function(d) {
@@ -64,7 +70,29 @@ d3.json("/data/keywords", function(error, data) {
       .attr("x", function(d) { return x(d.Keyword); })
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.Count); })
-      .attr("height", function(d) { return height - y(d.Count); });
+      .attr("height", function(d) { return height - y(d.Count); })
+      .attr("fill", function(d) {return "steelblue"})
+      .on("mouseover", function(d) {
+        d3.select(this)
+          .attr("fill", "blue");
+        tooltip_key.transition()
+          .duration(50)
+          .style("opacity", 0);
+        tooltip_key.transition()
+          .duration(20)
+          .style("opacity", .9);
+        tooltip_key.html("Count:" + "<br/>" + d.Count )
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 80) + "px");
+      })
+      .on("mouseout", function() {
+        d3.select(this)
+          .attr("fill", "steelblue");
+        tooltip_key.transition()
+          .duration(50)
+          .style("opacity", 0); 
+      });
+
 });
 
 

@@ -4,7 +4,7 @@ body.application{
 }
 
 body.application div[class^="row"] {
-	padding-left: 20px;
+	padding-left: 0px;
 }
 
 body.application > .container-fluid {
@@ -31,6 +31,8 @@ body.application p.summary {
 	color: black;
 	opacity: .8;
 	padding-left: 0px;
+	font-family: Lato;
+	font-weight: 500;
 }
 
 body.application p.sub-summary {
@@ -38,6 +40,8 @@ body.application p.sub-summary {
   color: black;
 	opacity: .5;
 	padding-left: 0px;
+	font-family: Lato;
+	font-weight: bold;
 }
 
 .navbar-default .container-fluid {
@@ -51,7 +55,8 @@ body.application p.sub-summary {
 	color: white;
 	text-decoration: none;
 	font-size: 180%;
-	font-family: Arial;
+	font-family: Lato;
+	font-weight: 500;
 }
 
 .navbar ul.navbar-nav {
@@ -60,19 +65,12 @@ body.application p.sub-summary {
 	padding-top: 7px;
   text-decoration: none;
   font-size: 180%;
-	font-family: Arial;
+	font-family: Lato;
+	font-weight: 500;
 }
 
 .icon {
 	padding-left: 20px;
-}
-
-.bar{
-	fill: steelblue;
-}
-
-.bar:hover{
-	fill: blue;
 }
 
 .axis {
@@ -108,6 +106,33 @@ body.application p.sub-summary {
 	opacity: 0.2;
 }
 
+keyword.tooltip{
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 40px;
+  padding: 2px;  
+  font: 12px sans-serif;
+  background: lightsteelblue;  
+  border: 0px;  
+  border-radius: 8px;  
+  pointer-events: none;
+}
+
+
+count.tooltip{
+	position: absolute;			
+	text-align: center;			
+	width: 60px;					
+	height: 20px;					
+	padding: 2px;				
+	font: 12px sans-serif;
+	background: lightsteelblue;	
+	border: 0px;		
+	border-radius: 8px;			
+	pointer-events: none;
+}
+
 .chart_wrapper {
 	background: #fff;
 	border: 1px solid #e2e2e2;
@@ -120,7 +145,7 @@ body.application p.sub-summary {
 	opacity: .8;
 	padding: 7px 10px 4px;
 	font-size: 130%;
-	font-family: Arial;
+	font-family: Lato;
 }
 
 .chart_wrapper .chart_title i{

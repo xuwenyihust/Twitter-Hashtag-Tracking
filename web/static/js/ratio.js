@@ -15,8 +15,8 @@ var ratio = d3.select("#ratio").append("svg")
           "translate(" + ratio_width  + "," + ratio_height/2 + ")");
 
 var labelArc = d3.svg.arc()
-    .outerRadius(90)
-    .innerRadius(0);
+    .outerRadius(100)
+    .innerRadius(40);
 
 
 var pie = d3.layout.pie()
@@ -26,7 +26,7 @@ var pie = d3.layout.pie()
 
 
 var arc = d3.svg.arc()
-         .innerRadius(0)
+         .innerRadius(50)
          .outerRadius(100);
 
 var color = d3.scale.category10();
@@ -52,9 +52,12 @@ d3.json("/data/ratio", function(error, data) {
      .attr("d", arc);
 
    arcs.append("text")
-     .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+     .attr("transform", function(d) {	
+ 		return "translate(" + labelArc.centroid(d) + ")"; })
+     .attr("text-anchor", "middle")
      .attr("dy", "0em")
-     .text(function(d) { return d.data.PN; });
+     .text(function(d) { return d.data.PN; });         
+      
 });
 
 

@@ -24,7 +24,7 @@ var count_yAxis = d3.svg.axis()
     .ticks(10);
 
 // Define the div for the tooltip
-var div = d3.select("body").append("div")	
+var tooltip_count = d3.select("body").append("count")	
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
@@ -90,22 +90,22 @@ d3.json("/data/counts", function(error, data) {
     .style("fill", "blue")	
 
     .on("mouseover", function(d) {		
-      div.transition()		
+      tooltip_count.transition()		
          .duration(50)		
          .style("opacity", 0);
 
-      div.transition()
+      tooltip_count.transition()
          .duration(20)
          .style("opacity", .9);		
 
-      div.html(d.Count + "<br/>"  + d.Time)	
+      tooltip_count.html(d.Count)	
          .style("left", (d3.event.pageX) + "px")		
          .style("top", (d3.event.pageY - 28) + "px");	
      })
 					
     .on("mouseout", function(d) {		
-      div.transition()		
-         .duration(5000)		
+      tooltip_count.transition()		
+         .duration(50)		
          .style("opacity", 0);	
     });
 
