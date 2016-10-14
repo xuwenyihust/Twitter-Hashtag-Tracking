@@ -84,10 +84,10 @@ d3.json("/data/counts", function(error, data) {
   count.selectAll("dot")
     .data(data)	
     .enter().append("circle")
-    .attr("r", 3)
+    .attr("r", 2)
     .attr("cx", function(d) { return 9+count_x(d.Time); })
     .attr("cy", function(d) { return count_y(d.Count); })
-    .style("fill", "blue")	
+    .style("fill", "steelblue")	
 
     .on("mouseover", function(d) {		
       tooltip_count.transition()		
