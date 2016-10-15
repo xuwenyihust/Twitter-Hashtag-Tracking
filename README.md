@@ -16,7 +16,7 @@ Set your own **src/config.json** file to get [Twitter API](https://apps.twitter.
   "ckey":    "XXX...XXX"
 ```
 
-Modify the conf/parameters.json file to set the parameters.
+Modify the **conf/parameters.json** file to set the parameters.
 ```json
 { "hashtag": "#overwatch",
   "DStream": { "batch_interval": "60",
@@ -78,7 +78,7 @@ python3.4 web/dashboard.py
 * Use **MongoDB** to store the analysis results
 
 ### Visualization
-The **dashboard**
+The **Dashboard**.
 
 **Time line** of related tweet counts, **most related hashtags**, **most related keywords**, the ratio of **postive/negative** tweets.
 <p align="justify">
@@ -95,6 +95,7 @@ The **dashboard**
 * [pandas](http://pandas.pydata.org/)
 * [pymongo](https://api.mongodb.com/python/current/)
 * [tweepy](http://www.tweepy.org/)
+* [pickle](https://docs.python.org/3/library/pickle.html)
 
 ## Resources
 * [Twitter Trends Analysis using Spark Streaming](http://www.awesomestats.in/spark-twitter-stream/)
