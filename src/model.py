@@ -6,6 +6,7 @@ from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.feature import HashingTF
 from pyspark.mllib.feature import IDF
+import pickle
 
 
 def parseLine(line):
@@ -80,7 +81,12 @@ def main(sc):
 	# Calculate the accuracy
 	accuracy = 1.0 * predictionAndLabel.filter(lambda x: x[0] == x[1]).count() / labeled_test_data.count()
 
+	print('>>> Accuracy')
 	print(accuracy)
+
+	#model.save(sc, '/model')
+	output = open('src/model/model.ml', 'wb')
+	pickle.dump(model,output)
 
 
 if __name__=="__main__":
