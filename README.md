@@ -1,6 +1,6 @@
 ![Python 3.4](https://img.shields.io/badge/python-3.4-green.svg)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
-![release v1.3](https://img.shields.io/badge/release-v1.3-red.svg)
+![release v1.4](https://img.shields.io/badge/release-v1.4-red.svg)
 # Twitter Hashtag Tracking
 
 ## Motivation
@@ -8,6 +8,14 @@ Track specific hashtags or keywords in Twitter, do real-time analysis on the twe
 
 ## Run Example
 ### Configuration
+Set your own **src/config.json** file to get [Twitter API](https://apps.twitter.com/) access.
+```json
+{ "asecret": "XXX...XXX",
+  "atoken":  "XXX...XXX",
+  "csecret": "XXX...XXX",
+  "ckey":    "XXX...XXX"
+```
+
 Modify the conf/parameters.json file to set the parameters.
 ```json
 { "hashtag": "#overwatch",
@@ -28,6 +36,12 @@ Wait for connection to start streaming tweets.
 ```
 python3.4 src/stream.py
 ```
+### Model Training
+Run Spark jobs to train a Naive Bayes model for later sentiment analysis.
+```
+$SPARK_HOME/bin/spark-submit src/model.py > log/model.log
+```
+
 ### Spark Streaming
 Run Spark jobs to do real-time analysis on the tweets.
 ```
