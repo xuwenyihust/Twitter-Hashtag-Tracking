@@ -31,17 +31,21 @@ Start a mongod process
 ```
 sudo mongod
 ```
-### Twitter Input
-Wait for connection to start streaming tweets.
-```
-python3.4 src/stream.py
-```
 ### Model Training
 Run Spark jobs to train a Naive Bayes model for later sentiment analysis.
 ```
 $SPARK_HOME/bin/spark-submit src/model.py > log/model.log
 ```
-
+You can check the accuracy of the trained model in **log/model.log**:
+```
+>>> Accuracy
+0.959944108057755
+```
+### Twitter Input
+Wait for connection to start streaming tweets.
+```
+python3.4 src/stream.py
+```
 ### Spark Streaming
 Run Spark jobs to do real-time analysis on the tweets.
 ```
