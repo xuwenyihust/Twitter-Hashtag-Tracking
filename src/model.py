@@ -18,7 +18,9 @@ def parseLine(line):
 	words = tweet.strip().split(" ")
 	return (label, words)
 
+
 def main(sc):
+
 	data = sc.textFile('data/train.txt').map(parseLine)
 	#print(data.take(10))
 
@@ -26,7 +28,6 @@ def main(sc):
 	training, test = data.randomSplit([0.7, 0.3], seed = 0)
 
 	# TF-IDF
-
 	# TF
 	# Features will be hashed to indexes
 	# And the feature(term) frequencies will be calculated
@@ -73,7 +74,7 @@ def main(sc):
 
 	test_labeled = joined_tfidf_test.map(lambda tup: tup[1])
 	labeled_test_data = test_labeled.map(lambda k: LabeledPoint(k[0][0], k[1]))
-	print(labeled_test_data.take(2))
+	#print(labeled_test_data.take(2))
 	# Apply the trained model on Test data
 	predictionAndLabel = labeled_test_data.map(lambda p : (model.predict(p.features), p.label))
 	#print(predictionAndLabel.take(10))

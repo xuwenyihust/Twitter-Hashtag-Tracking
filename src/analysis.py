@@ -28,8 +28,6 @@ def tweet_count(lines):
 def user_count(lines):
 	user_cnt = lines.flatMap(lambda line: line.split('---')) \
 				 .map(lambda line: line[:line.find('+++')]) 
-
-	#user_cnt.pprint()	
 	user_cnt.foreachRDD(lambda x: user_cnt_li.extend(x.distinct().collect()))	
 
 
@@ -146,15 +144,6 @@ def data_to_db(db, start_time, counts, user_cnt_len_li, keywords, hashtags, pos,
 	tracking_word_js = json.loads(tracking_word_df.reset_index().to_json(orient='records'))
 	collection = db['tracking_word']
 	db['tracking_word'].insert(tracking_word_js)
-
-def parseLine(line):
-	parts = line.split('\t')
-	label = int(parts[0])
-	tweet = parts[1]
-	# Tokenize
-	# Split a document into a collection of words
-	words = tweet.strip().split(" ")
-	return (label, words)
 
 
 def main(sc, db, tracking_word):
