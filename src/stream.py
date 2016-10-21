@@ -14,19 +14,19 @@ def api_access():
 
 	return config
 
-def hashtag_load():
-	hashtag = ''
+def keyword_load():
+	keyword = ''
 	with open('conf/parameters.json') as f:
 		h = json.load(f)
-		hashtag = h['hashtag']
-	return hashtag
+		keyword = h['keyword']
+	return keyword
 
-def send_data(c_socket, hashtag):
+def send_data(c_socket, keyword):
 	auth = OAuthHandler(ckey, csecret)
 	auth.set_access_token(atoken, asecret)
 
 	twitter_stream = Stream(auth, listener(c_socket))
-	twitter_stream.filter(track=[hashtag], languages=['en'])
+	twitter_stream.filter(track=[keyword], languages=['en'])
 	
 
 if __name__ == '__main__':
@@ -37,8 +37,8 @@ if __name__ == '__main__':
 	csecret = config['csecret']
 	ckey = config['ckey']
 
-	# Load the hashtag to be tracked
-	hashtag = hashtag_load()
+	# Load the keyword to be tracked
+	keyword = keyword_load()
 
 	# Create a TCP/IP socket object
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
 	print('>>> Received request from ' + str(addr))
 
-	send_data(client, hashtag)
+	send_data(client, keyword)
 
 	s.close()
 

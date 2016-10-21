@@ -277,7 +277,7 @@ if __name__=="__main__":
 	# Load parameters
 	with open('conf/parameters.json') as f:
 		p = json.load(f)
-		tracking_word = p['hashtag'][1:]
+		tracking_word = p['keyword']
 		batch_interval = int(p['DStream']['batch_interval'])
 		window_time = int(p['DStream']['window_time'])
 		process_times = int(p['DStream']['process_times'])
