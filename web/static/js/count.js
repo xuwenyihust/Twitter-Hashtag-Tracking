@@ -15,6 +15,7 @@ var count_xAxis = d3.svg.axis()
     .orient("bottom")
     //.tickSize(-count_height, 0, 0)
     .outerTickSize(0);
+    //.ticks(10);
 
 var count_yAxis = d3.svg.axis()
     .scale(count_y)
@@ -48,24 +49,39 @@ d3.json("/data/counts", function(error, data) {
   count_x.domain(data.map(function(d) { return d.Time; }));
   //x.domain([0, d3.max(data, function(d) { return d.Time; })]);
   count_y.domain([0, d3.max(data, function(d) { return d.Count; })]);
+
   // add axis
+  // x axis
   count.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + count_height + ")")
       .call(count_xAxis)
+      .attr("class", function(d,i) {
+          if(i%3 != 0) d3.select(this).remove();
+       })
     .selectAll("text")
       .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", "-.55em")
+      .attr("dx", "-.0em")
+      .attr("dy", "-.1em")
+      .attr("class", function(d,i) {
+          if(i%3 != 0) d3.select(this).remove();
+       })
       .attr("transform", "rotate(-40)" );
+  // Remove some x axis
+  //var x_tick = d3.selectAll(".g x axis");
+  //x_ticks.attr("class", function(d,i) {
+  //    if(i%2 != 0) d3.select(this).remove();
+  //});
 
+  // y axis
   count.append("g")
       .attr("class", "y axis")
       .call(count_yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 5)
+      .attr("y", 6)
       .attr("dy", ".71em")
+      //.attr("dx", "1.5em")
       .style("text-anchor", "end")
       .text("Count");
 
