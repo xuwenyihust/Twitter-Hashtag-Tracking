@@ -4,7 +4,7 @@
 # Twitter Hashtag Tracking
 
 ## Motivation
-Track specific hashtags or keywords in Twitter, do real-time analysis on the tweets.
+Track specific hashtags or keywords in Twitter, and do real-time analysis on the tweets.
 
 ## Run Example
 ### Configuration
